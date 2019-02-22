@@ -111,9 +111,11 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    filename = str(animal_) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_save = str(animal_) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
-    with open (filename, 'r') as f:
+    filename_in = 'Lists_' + str(animal_) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    
+    with open (filename_in, 'r') as f:
         training_list = f.readlines()
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
@@ -130,7 +132,7 @@ def trajectoryInput():
     pos = training_list[((rewardIndices[1])+1):-1]
     pos = list(map(int, pos))
     
-    return (filename, rew, pos)
+    return (filename_save, rew, pos)
 
 
 #This fills the tones first
