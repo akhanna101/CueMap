@@ -15,18 +15,6 @@ nosePoke = 11
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=100)
-GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
-GPIO.output(dipper, 0)
-
-cueTime_ms = 4000
-sample_rate = 44100
-bits = 16
-max_sample = 2**(bits - 1) - 1
-
-pixels = 12
-
-Map = numpy.empty((pixels,2),dtype=object)
 
 def IOD(a):
     
@@ -42,7 +30,20 @@ def IOD(a):
         NPs[1].append(time.time())
 ##        tf = open("TT","a")
 ##        tf.write(str(time.time()) + "   " + "R" + '\n')
-    
+  
+  
+GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=100)
+GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
+GPIO.output(dipper, 0)
+
+cueTime_ms = 4000
+sample_rate = 44100
+bits = 16
+max_sample = 2**(bits - 1) - 1
+
+pixels = 12
+
+Map = numpy.empty((pixels,2),dtype=object)  
 
 
 def savedata(Event):
@@ -111,9 +112,9 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    filename_save = str(animal_) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_save = str(animal) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
-    filename_in = 'Lists_' + str(animal_) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_in = 'Lists_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
@@ -126,7 +127,7 @@ def trajectoryInput():
         if '%' in elem:
             rewardIndices.append(i)
     rew = training_list[((rewardIndices[0])+1):rewardIndices[1]]
-    rew = list(map(int,Rew))
+    rew = list(map(int,rew))
     
     #Separates trajectory list from reward list and turns it into pos. pos is a list of integers indicating which pixels to play
     pos = training_list[((rewardIndices[1])+1):-1]
