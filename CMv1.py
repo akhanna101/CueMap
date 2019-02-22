@@ -10,7 +10,7 @@ global NPs
 NPs = ([], [])
 
 #Input output pins for the dipper and nosepoke
-dipper = 18
+dipper = 23
 nosePoke = 11
 
 GPIO.setmode(GPIO.BCM)
