@@ -17,11 +17,11 @@ def trajectoryInput():
     for i, elem in enumerate(training_list):
         if '%' in elem:
             rewardIndices.append(i)
-    Rew = training_list[((rewardIndices[0])+1):rewardIndices[1]]
-    Rew = list(map(int,Rew))
+    rew = training_list[((rewardIndices[0])+1):rewardIndices[1]]
+    rew = list(map(int,rew))
     
-    #Separates trajectory list from reward list and turns it into list_path. list_path is a list of integers indicating which pixels to play
-    list_path = training_list[((rewardIndices[1])+1):-1]
-    list_path = list(map(int,list_path))
+    #Separates trajectory list from reward list and turns it into pos. pos is a list of integers indicating which pixels to play
+    pos = training_list[((rewardIndices[1])+1):-1]
+    pos = list(map(int,pos))
     
-    return (Rew, list_path)
+    return (rew, pos)
