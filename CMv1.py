@@ -37,9 +37,11 @@ GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
 GPIO.output(dipper, 0)
 
 cueTime_ms = 4000
+FeederOn_ms = 500
 sample_rate = 44100
 bits = 16
-max_sample = 2**(bits - 1) - 1
+max_sample_t = 2**(bits*(2/3) - 1) - 1
+max_sample_c = 2**(bits - 1) - 1
 
 pixels = 12
 
@@ -112,9 +114,9 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    filename_save = str(animal) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_save = 'Data/Run_0319/'+str(animal) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
-    filename_in = 'Lists_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_in = 'Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
@@ -136,20 +138,40 @@ def trajectoryInput():
     return (filename_save, rew, pos)
 
 
+def Get_Volumes():
+    filename_vol = 'Volumes.txt' # Determine the filename for the traininglist trajectory
+
+    with open (filename_vol, 'r') as fv:
+        vols = fv.readlines()
+    
+    volt = [None]*12
+    volc = [None]*12
+    
+    n = 0
+    for line in enumerate(training_list):
+        if not '%' in line:
+            if n < 12:
+                volt[n] = float(line)
+            else:
+                volc[n-12] = float(line)
+            n += 1
+            
+    return (volt,volc)
+
 #This fills the tones first
 #start frequency
-freq = 400
+freq = 450
 cfreq = 2
 spacing = 4/3
 for p in range(pixels):
-    Map[p][0] = getsin(sample_rate,freq,max_sample)
-    Map[p][1] = getclick(sample_rate,cfreq,max_sample)
+    Map[p][0] = getsin(sample_rate,freq,max_sample_t)
+    Map[p][1] = getclick(sample_rate,cfreq,max_sample_c)
     freq = freq*spacing
     cfreq = cfreq*spacing
     
-print(Map[3][0].shape)
-print(Map[3][0].shape)
-pygame.mixer.pre_init(sample_rate, -16, 2) # 44.1kHz, 16-bit signed, stereo
+#print(Map[3][0].shape)
+#print(Map[3][0].shape)
+pygame.mixer.pre_init(sample_rate, -bits, 2) # 44.1kHz, 16-bit signed, stereo
 pygame.init()
 
 _running = True
@@ -160,9 +182,10 @@ tf = open(filename,"w")
 tf.write('START' +'\n')
 tf.close()
 
-
-volt = [0.8,0.5,0.45,0.42,0.4,0.4,0.4,0.42,0.45,0.5,0.6,0.7]
-volc = [1,1,0.99,0.98,0.97,0.95,0.93,0.90,0.87,0.83,0.79,0.74]
+#This gets the volume file for each tone and click
+volt,volc = Get_Volumes()
+##volt = [0.8,0.5,0.45,0.42,0.4,0.4,0.4,0.42,0.45,0.5,0.6,0.7]
+##volc = [1,1,0.99,0.98,0.97,0.95,0.93,0.90,0.87,0.83,0.79,0.74]
 
 st = time.time()
 
@@ -173,11 +196,11 @@ for p in pos:
     play_for(Map[r][0],Map[c][1],volc[c],volt[r])
     savedata(str(p))
     #play_for(Map[c][1],4000,1,0)
-    print(time.time()-start)
+    #print(time.time()-start)
     if p in rew:  
         GPIO.output(dipper, 1)
-    pygame.time.delay(cueTime_ms)
-    GPIO.output(dipper, 0)
+        pygame.time.delay(FeederOn_ms)
+        GPIO.output(dipper, 0)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
