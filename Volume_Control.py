@@ -15,8 +15,8 @@ amp = amp_start
 
 sample_rate = 44100
 bits = 16
-max_sample_t = 2**((bits*(2/3)) - 1) - 1
-max_sample_c = 2**((bits) - 1) - 1
+max_sample_t = 2**((bits*(0.6)) - 1) - 1
+max_sample_c = 2**((bits*(5/6)) - 1) - 1
 
 size = (400,400)
 pygame.mixer.pre_init(44100, -bits, 2)
@@ -46,7 +46,7 @@ def getsin(sample_rate,freq,max_sample):
 def getclick(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
     f = numpy.zeros(int(length),dtype=numpy.int16)
-    f[:10] = max_sample
+    f[:3] = max_sample
     #f = numpy.stack((f, f),axis=1)
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
@@ -107,9 +107,9 @@ for i in range(2):
                     pygame.quit()
                     file.close()
 
-tone_click_volumes = amps.flatten(order='C')
+tone_click_volumes = amps.flatten(order='F')
 #volumes = open('Volumes.txt', 'w')
-numpy.savetxt('Volumes', tone_click_volumes)
+numpy.savetxt('Volumes.txt', tone_click_volumes)
 
 pygame.mixer.Channel(0).stop
 pygame.display.quit()

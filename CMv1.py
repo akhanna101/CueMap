@@ -17,48 +17,48 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def IOD(a):
-    
+    NPs[0].append(time.time())
     if GPIO.input(nosePoke):
-        print('ON')
-        
-        NPs[0].append(time.time())
+        #print('ON')
+        NPs[1].append('I')
+        #NPs[0].append(time.time())
 ##        tf = open("TT","a")
 ##        tf.write(str(time.time()) + "   " + "F" + '\n')
 ##        
     else:
-        print('OFF')
-        NPs[1].append(time.time())
+        #print('OFF')
+        NPs[1].append('O')
 ##        tf = open("TT","a")
 ##        tf.write(str(time.time()) + "   " + "R" + '\n')
   
   
-GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=100)
+GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=10)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
 GPIO.output(dipper, 0)
 
-cueTime_ms = 4000
+cueTime_ms = 3000
 FeederOn_ms = 500
 sample_rate = 44100
 bits = 16
-max_sample_t = 2**(bits*(2/3) - 1) - 1
-max_sample_c = 2**(bits - 1) - 1
+max_sample_t = 2**(bits*(0.6) - 1) - 1
+max_sample_c = 2**(bits*(5/6) - 1) - 1
 
 pixels = 12
 
 Map = numpy.empty((pixels,2),dtype=object)  
-
+Freq = numpy.zeros((pixels,2),dtype=float)
 
 def savedata(Event):
     global NPs
     t = time.time()
     tf = open(filename,"a")
-    for x in NPs[0]:
+    for x in range(len(NPs[0])):
         
-        tf.write(str(x-st) + "   " + "F" + '\n')
+        tf.write(str(NPs[0][x]-st) + "   " + NPs[1][x] + '\n')
         
-    for x in NPs[1]:
-        
-        tf.write(str(x-st) + "   " + "R" + '\n')
+##    for x in NPs[1]:
+##        
+##        tf.write(str(x-st) + "   " + "R" + '\n')
         
     NPs = ([],[])
     
@@ -82,25 +82,32 @@ def getsin(sample_rate,freq,max_sample):
 def getclick(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
     f = numpy.zeros(int(length),dtype=numpy.int16)
-    f[:10] = max_sample
+    f[:3] = max_sample
     #f = numpy.stack((f, f),axis=1)
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
 
-def play_for(sample_array_r,sample_array_c, volLeft, volRight):
+def play_for(sample_array_r,sample_array_c, volLeft, volRight,rp,cp,delayc):
+    #pygame.mixer.Channel(1).stop
     soundr = pygame.sndarray.make_sound(sample_array_r)
     soundc = pygame.sndarray.make_sound(sample_array_c)
     #beg = time.time()
     #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
-    pygame.mixer.Channel(0).play(soundr,loops=-1)
-    pygame.mixer.Channel(0).set_volume(0,volRight)
+    if not rp:
+        pygame.mixer.Channel(0).play(soundr,loops=-1)
+        pygame.mixer.Channel(0).set_volume(0,volRight)
     #channelc = pygame.mixer.Channel(1).play(soundr,loops=-1)
-    pygame.mixer.Channel(1).play(soundc,loops=-1)
+    #pygame.time.delay(delayc)
+    if not cp:
+        pygame.mixer.Channel(1).stop
+        pygame.time.delay(max(0,delayc))
+        pygame.mixer.Channel(1).play(soundc,loops=-1)
+        pygame.mixer.Channel(1).set_volume(volLeft,0)
     #channelc.set_volume(volLeft,0)
-    pygame.mixer.Channel(1).set_volume(volLeft,0)
-    pygame.mixer.Channel(2).play(soundc,loops=-1)
-    #channelc.set_volume(volLeft,0)
-    pygame.mixer.Channel(2).set_volume(volLeft,0)
+        #pygame.mixer.Channel(1).set_volume(volLeft,0)
+##    pygame.mixer.Channel(2).play(soundc,loops=-1)
+##    #channelc.set_volume(volLeft,0)
+##    pygame.mixer.Channel(2).set_volume(volLeft,0)
     
     #pygame.time.delay(ms)
     #sound.stop()
@@ -114,7 +121,7 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    filename_save = 'Data/Run_0319/'+str(animal) + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     filename_in = 'Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
@@ -126,13 +133,17 @@ def trajectoryInput():
     #Find the Rewarded Pixels based on the pixels that fall between % in our training list.
     rewardIndices = []
     for i, elem in enumerate(training_list):
-        if '%' in elem:
+        if '#' in elem:
+            print(i)
+            print(elem)
             rewardIndices.append(i)
-    rew = training_list[((rewardIndices[0])+1):rewardIndices[1]]
+    print(rewardIndices)
+    ##The first comment in the text file is the rat number and day, need to skip to the second line 
+    rew = training_list[((rewardIndices[1])+1):rewardIndices[2]]
     rew = list(map(int,rew))
     
     #Separates trajectory list from reward list and turns it into pos. pos is a list of integers indicating which pixels to play
-    pos = training_list[((rewardIndices[1])+1):-1]
+    pos = training_list[((rewardIndices[2])+1):-1]
     pos = list(map(int, pos))
     
     return (filename_save, rew, pos)
@@ -140,22 +151,24 @@ def trajectoryInput():
 
 def Get_Volumes():
     filename_vol = 'Volumes.txt' # Determine the filename for the traininglist trajectory
-
+    amp = 0.2;
+    
     with open (filename_vol, 'r') as fv:
         vols = fv.readlines()
     
     volt = [None]*12
     volc = [None]*12
     
-    n = 0
-    for line in enumerate(training_list):
+    
+    for i,line in enumerate(vols):
         if not '%' in line:
-            if n < 12:
-                volt[n] = float(line)
+            if i < 12:
+                volt[i-1] = float(line)
             else:
-                volc[n-12] = float(line)
-            n += 1
+                volc[i-12] = float(line)
+                print(i)
             
+    print(volc)        
     return (volt,volc)
 
 #This fills the tones first
@@ -164,6 +177,8 @@ freq = 450
 cfreq = 2
 spacing = 4/3
 for p in range(pixels):
+    Freq[p][0] = 1000*(1/freq)
+    Freq[p][1] = 1000*(1/cfreq)
     Map[p][0] = getsin(sample_rate,freq,max_sample_t)
     Map[p][1] = getclick(sample_rate,cfreq,max_sample_c)
     freq = freq*spacing
@@ -177,7 +192,8 @@ pygame.init()
 _running = True
 
 filename, rew, pos = trajectoryInput()
-
+print('here')
+print(rew)
 tf = open(filename,"w")
 tf.write('START' +'\n')
 tf.close()
@@ -188,17 +204,24 @@ volt,volc = Get_Volumes()
 ##volc = [1,1,0.99,0.98,0.97,0.95,0.93,0.90,0.87,0.83,0.79,0.74]
 
 st = time.time()
-
+offset = 0
+rp = -1
+cp = -1
 for p in pos:    
     start = time.time()
     c,r = trunc_divmod(p-1,pixels)
+    
+    print(Freq[c][1] - offset)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
-    play_for(Map[r][0],Map[c][1],volc[c],volt[r])
+    play_for(Map[r][0],Map[c][1],volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
+    _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
     savedata(str(p))
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
-    if p in rew:  
+    if p in rew:
         GPIO.output(dipper, 1)
+        savedata('F')
+        print('pellet')
         pygame.time.delay(FeederOn_ms)
         GPIO.output(dipper, 0)
     
@@ -206,6 +229,10 @@ for p in pos:
         if event.type == pygame.QUIT:
             _running = False
             break
-     
+    #time.sleep(cueTime_ms/1000 - .001*(time.time() - start))
+    cp = c
+    rp = r
+    pygame.time.delay(cueTime_ms - 1 - int(1000*(time.time() - start)))
+    print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
