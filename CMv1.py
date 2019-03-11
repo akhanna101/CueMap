@@ -11,7 +11,7 @@ NPs = ([], [])
 
 #Input output pins for the dipper and nosepoke
 dipper = 23
-nosePoke = 11
+nosePoke = 22
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -90,7 +90,7 @@ def getsin(sample_rate,freq,max_sample):
 def getclick(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
     f = numpy.zeros(int(length),dtype=numpy.int16)
-    f[:3] = max_sample
+    f[:2] = max_sample
     #f = numpy.stack((f, f),axis=1)
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
@@ -191,7 +191,7 @@ def Get_Volumes():
 
 #This fills the tones first
 #start frequency
-freq = 450
+freq = 800
 cfreq = 2
 spacing = 4/3
 for p in range(pixels):
