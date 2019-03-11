@@ -3,7 +3,7 @@ from pygame import *
 import pygame, time, numpy, pygame.sndarray
 import time as time
 import RPi.GPIO as GPIO
-
+import os
 
 global NPs
 
@@ -40,8 +40,8 @@ cueTime_ms = 3000
 FeederOn_ms = 500
 sample_rate = 44100
 bits = 16
-max_sample_t = 2**(bits*(0.6) - 1) - 1
-max_sample_c = 2**(bits*(5/6) - 1) - 1
+max_sample_t = 2**(bits*(0.7) - 1) - 1
+max_sample_c = 2**(bits - 1) - 1
 
 pixels = 12
 
@@ -66,7 +66,15 @@ def savedata(Event):
         
     tf.close()
     
-    
+#This function makes sure that any file on that day is not overwritten
+def checkfilename(filename):
+
+    filenameuse = filename
+    n = 0
+    while os.path.isfile(filenameuse):
+        n += 1
+        filenameuse = filename + '_' + str(n)
+    return(filenameuse)    
 
 
 
@@ -121,7 +129,17 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    
+    #this is added to allow for testing...
+    if animal == 't' and day == 't':
+        filename_save = 'Data/Run_0319/Test.txt'
+        animal = 1
+        day = 1
+    else:    
+        filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    
+    #check to make sure there isn't a filename already with that name
+    filename = checkfilename(filename_save)
     
     filename_in = 'Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
@@ -163,7 +181,7 @@ def Get_Volumes():
     for i,line in enumerate(vols):
         if not '%' in line:
             if i < 12:
-                volt[i-1] = float(line)
+                volt[i] = float(line)
             else:
                 volc[i-12] = float(line)
                 print(i)
@@ -192,7 +210,6 @@ pygame.init()
 _running = True
 
 filename, rew, pos = trajectoryInput()
-print('here')
 print(rew)
 tf = open(filename,"w")
 tf.write('START' +'\n')

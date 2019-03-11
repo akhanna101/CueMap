@@ -15,8 +15,8 @@ amp = amp_start
 
 sample_rate = 44100
 bits = 16
-max_sample_t = 2**((bits*(0.6)) - 1) - 1
-max_sample_c = 2**((bits*(5/6)) - 1) - 1
+max_sample_t = 2**((bits*(0.7)) - 1) - 1
+max_sample_c = 2**((bits) - 1) - 1
 
 size = (400,400)
 pygame.mixer.pre_init(44100, -bits, 2)
@@ -33,6 +33,31 @@ amps[:,1] = amp
 
 #Import functions used to create/play map
 
+def Get_Volumes():
+    filename_vol = 'Volumes.txt' # Determine the filename for the traininglist trajectory
+    amp = 0.2;
+    
+    with open (filename_vol, 'r') as fv:
+        vols = fv.readlines()
+    
+    volt = [None]*12
+    volc = [None]*12
+    
+    for i,line in enumerate(vols):
+        if not '%' in line:
+            if i < 12:
+                volt[i] = float(line)
+                print(i)
+                print(line)
+            else:
+                volc[i-12] = float(line)
+                print(i)
+            
+    print(volc)
+    print(volt)
+    return (volt,volc)
+
+
 def getsin(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
     omega = numpy.pi * 2 / length
@@ -46,7 +71,7 @@ def getsin(sample_rate,freq,max_sample):
 def getclick(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
     f = numpy.zeros(int(length),dtype=numpy.int16)
-    f[:3] = max_sample
+    f[:2] = max_sample
     #f = numpy.stack((f, f),axis=1)
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
@@ -56,9 +81,14 @@ def getclick(sample_rate,freq,max_sample):
 
 #This fills the tones first
 #start frequency
-freq = 450 #400
+freq = 800 #400
 cfreq = 2
 spacing = 4/3
+
+volt, volc = Get_Volumes()
+amps[:,0] = volt
+amps[:,1] = volc
+
 for p in range(pixels):
     Freq[p][0] = freq
     Freq[p][1] = cfreq
@@ -106,6 +136,7 @@ for i in range(2):
                     pygame.display.quit()
                     pygame.quit()
                     file.close()
+
 
 tone_click_volumes = amps.flatten(order='F')
 #volumes = open('Volumes.txt', 'w')
