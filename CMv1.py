@@ -4,7 +4,7 @@ import pygame, time, numpy, pygame.sndarray
 import time as time
 import RPi.GPIO as GPIO
 import os
-
+os.nice = -10
 global NPs
 
 NPs = ([], [])
@@ -152,10 +152,9 @@ def trajectoryInput():
     rewardIndices = []
     for i, elem in enumerate(training_list):
         if '#' in elem:
-            print(i)
-            print(elem)
+
             rewardIndices.append(i)
-    print(rewardIndices)
+
     ##The first comment in the text file is the rat number and day, need to skip to the second line 
     rew = training_list[((rewardIndices[1])+1):rewardIndices[2]]
     rew = list(map(int,rew))
@@ -227,12 +226,12 @@ cp = -1
 for p in pos:    
     start = time.time()
     c,r = trunc_divmod(p-1,pixels)
-    
-    print(Freq[c][1] - offset)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
-    play_for(Map[r][0],Map[c][1],volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
-    _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
     savedata(str(p))
+    play_for(Map[r][0],Map[c][1],volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
+    
+    _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
+    print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
     if p in rew:
@@ -250,6 +249,6 @@ for p in pos:
     cp = c
     rp = r
     pygame.time.delay(cueTime_ms - 1 - int(1000*(time.time() - start)))
-    print(time.time() - start)    
+    ##print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
