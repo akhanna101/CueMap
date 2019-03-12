@@ -95,10 +95,10 @@ def getclick(sample_rate,freq,max_sample):
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
 
-def play_for(sample_array_r,sample_array_c, volLeft, volRight,rp,cp,delayc):
+def play_for(soundr, soundc, volLeft, volRight,rp,cp,delayc):
     #pygame.mixer.Channel(1).stop
-    soundr = pygame.sndarray.make_sound(sample_array_r)
-    soundc = pygame.sndarray.make_sound(sample_array_c)
+##    soundr = pygame.sndarray.make_sound(sample_array_r)
+##    soundc = pygame.sndarray.make_sound(sample_array_c)
     #beg = time.time()
     #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
     if not rp:
@@ -183,9 +183,9 @@ def Get_Volumes():
                 volt[i] = float(line)
             else:
                 volc[i-12] = float(line)
-                print(i)
+                #print(i)
             
-    print(volc)        
+           
     return (volt,volc)
 
 #This fills the tones first
@@ -223,18 +223,25 @@ st = time.time()
 offset = 0
 rp = -1
 cp = -1
-for p in pos:    
+
+#This gets the sound buffer for the starting vertex
+c,r = trunc_divmod(pos[0]-1,pixels)
+soundr = pygame.sndarray.make_sound(Map[r][0])
+soundc = pygame.sndarray.make_sound(Map[c][1])
+
+for p in range(len(pos)):    
     start = time.time()
-    c,r = trunc_divmod(p-1,pixels)
+    
+    #print(p)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
-    savedata(str(p))
-    play_for(Map[r][0],Map[c][1],volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
+    savedata(str(pos[p]-1))
+    play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
     print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
-    if p in rew:
+    if pos[p]-1 in rew:
         GPIO.output(dipper, 1)
         savedata('F')
         print('pellet')
@@ -245,10 +252,17 @@ for p in pos:
         if event.type == pygame.QUIT:
             _running = False
             break
-    #time.sleep(cueTime_ms/1000 - .001*(time.time() - start))
+        
     cp = c
     rp = r
-    pygame.time.delay(cueTime_ms - 1 - int(1000*(time.time() - start)))
+    #this gets the next position
+    if not p + 1 == len(pos):
+        c,r = trunc_divmod(pos[p+1]-1,pixels)
+        soundr = pygame.sndarray.make_sound(Map[r][0])
+        soundc = pygame.sndarray.make_sound(Map[c][1])
+        #time.sleep(cueTime_ms/1000 - .001*(time.time() - start))
+
+    pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
     ##print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
