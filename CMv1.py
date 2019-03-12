@@ -238,7 +238,7 @@ for p in range(len(pos)):
     play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
-    print(r,c)
+    
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
     if pos[p]-1 in rew:
@@ -252,7 +252,9 @@ for p in range(len(pos)):
         if event.type == pygame.QUIT:
             _running = False
             break
-        
+    
+    print('tone:',r,' click:',c,' position:',p)
+    
     cp = c
     rp = r
     #this gets the next position
