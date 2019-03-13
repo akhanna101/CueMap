@@ -192,7 +192,7 @@ def Get_Volumes():
 #start frequency
 freq = 800
 cfreq = 2
-spacing = 4/3
+spacing = 1.3
 for p in range(pixels):
     Freq[p][0] = 1000*(1/freq)
     Freq[p][1] = 1000*(1/cfreq)
@@ -219,7 +219,7 @@ volt,volc = Get_Volumes()
 ##volt = [0.8,0.5,0.45,0.42,0.4,0.4,0.4,0.42,0.45,0.5,0.6,0.7]
 ##volc = [1,1,0.99,0.98,0.97,0.95,0.93,0.90,0.87,0.83,0.79,0.74]
 
-st = time.time()
+
 offset = 0
 rp = -1
 cp = -1
@@ -228,6 +228,9 @@ cp = -1
 c,r = trunc_divmod(pos[0]-1,pixels)
 soundr = pygame.sndarray.make_sound(Map[r][0])
 soundc = pygame.sndarray.make_sound(Map[c][1])
+
+pygame.time.delay(30000)
+st = time.time()
 
 for p in range(len(pos)):    
     start = time.time()
