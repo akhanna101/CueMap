@@ -192,7 +192,7 @@ def Get_Volumes():
 #start frequency
 freq = 800
 cfreq = 2
-spacing = 4/3
+spacing = 1.3
 for p in range(pixels):
     Freq[p][0] = 1000*(1/freq)
     Freq[p][1] = 1000*(1/cfreq)
@@ -229,6 +229,8 @@ c,r = trunc_divmod(pos[0]-1,pixels)
 soundr = pygame.sndarray.make_sound(Map[r][0])
 soundc = pygame.sndarray.make_sound(Map[c][1])
 
+pygame.time.delay(30000)
+st = time.time()
 for p in range(len(pos)):    
     start = time.time()
     
@@ -238,7 +240,7 @@ for p in range(len(pos)):
     play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
-    
+    print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
     if pos[p]-1 in rew:
@@ -252,9 +254,7 @@ for p in range(len(pos)):
         if event.type == pygame.QUIT:
             _running = False
             break
-    
-    print('tone:',r,' click:',c,' position:',p)
-    
+        
     cp = c
     rp = r
     #this gets the next position
