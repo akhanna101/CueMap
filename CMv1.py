@@ -18,19 +18,12 @@ GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def IOD(a):
     NPs[0].append(time.time())
+    
     if GPIO.input(nosePoke):
-        #print('ON')
         NPs[1].append('I')
-        #NPs[0].append(time.time())
-##        tf = open("TT","a")
-##        tf.write(str(time.time()) + "   " + "F" + '\n')
-##        
     else:
-        #print('OFF')
         NPs[1].append('O')
-##        tf = open("TT","a")
-##        tf.write(str(time.time()) + "   " + "R" + '\n')
-  
+
   
 GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=10)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
@@ -55,11 +48,7 @@ def savedata(Event):
     for x in range(len(NPs[0])):
         
         tf.write(str(NPs[0][x]-st) + "   " + NPs[1][x] + '\n')
-        
-##    for x in NPs[1]:
-##        
-##        tf.write(str(x-st) + "   " + "R" + '\n')
-        
+
     NPs = ([],[])
     
     tf.write(str(t-st) + "   " + Event + '\n')
@@ -95,53 +84,51 @@ def getclick(sample_rate,freq,max_sample):
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
 
-def play_for(soundr, soundc, volLeft, volRight,rp,cp,delayc):
-    #pygame.mixer.Channel(1).stop
-##    soundr = pygame.sndarray.make_sound(sample_array_r)
-##    soundc = pygame.sndarray.make_sound(sample_array_c)
-    #beg = time.time()
-    #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
-   
-        if not rp:
-            pygame.mixer.Channel(0).play(soundr,loops=-1)
-            pygame.mixer.Channel(0).set_volume(0,volRight)
-    #channelc = pygame.mixer.Channel(1).play(soundr,loops=-1)
-    #pygame.time.delay(delayc)
-        if not cp:
-            pygame.mixer.Channel(1).stop
-            pygame.time.delay(max(0,delayc))
-            pygame.mixer.Channel(1).play(soundc,loops=-1)
-            pygame.mixer.Channel(1).set_volume(volLeft,0)
-    #channelc.set_volume(volLeft,0)
-        #pygame.mixer.Channel(1).set_volume(volLeft,0)
-##    pygame.mixer.Channel(2).play(soundc,loops=-1)
+##def play_for(soundr, soundc, volLeft, volRight,rp,cp,delayc):
+##    #pygame.mixer.Channel(1).stop
+####    soundr = pygame.sndarray.make_sound(sample_array_r)
+####    soundc = pygame.sndarray.make_sound(sample_array_c)
+##    #beg = time.time()
+##    #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
+##   
+##        if not rp:
+##            pygame.mixer.Channel(0).play(soundr,loops=-1)
+##            pygame.mixer.Channel(0).set_volume(0,volRight)
+##    #channelc = pygame.mixer.Channel(1).play(soundr,loops=-1)
+##    #pygame.time.delay(delayc)
+##        if not cp:
+##            pygame.mixer.Channel(1).stop
+##            pygame.time.delay(max(0,delayc))
+##            pygame.mixer.Channel(1).play(soundc,loops=-1)
+##            pygame.mixer.Channel(1).set_volume(volLeft,0)
 ##    #channelc.set_volume(volLeft,0)
-##    pygame.mixer.Channel(2).set_volume(volLeft,0)
-    
-    #pygame.time.delay(ms)
-    #sound.stop()
+##        #pygame.mixer.Channel(1).set_volume(volLeft,0)
+####    pygame.mixer.Channel(2).play(soundc,loops=-1)
+####    #channelc.set_volume(volLeft,0)
+####    pygame.mixer.Channel(2).set_volume(volLeft,0)
+##    
+##    #pygame.time.delay(ms)
+##    #sound.stop()
 
 def sound_load(sample_array_r, sample_array_c, volLeft, volRight,rp,cp,delayc,rchan,cchan):
     
-    #pygame.mixer.Channel(1).stop
+   
     soundr = pygame.sndarray.make_sound(sample_array_r)
     soundc = pygame.sndarray.make_sound(sample_array_c)
     #beg = time.time()
-    #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
+  
     if not rp:
         if rchan == 0:    
             pygame.mixer.Channel(2).play(soundr,loops=-1)
             pygame.mixer.Channel(2).set_volume(0,0)
-            #pygame.mixer.Channel(2).set_volume(0,volRight)
+        
             rchan = 2
         else:
             pygame.mixer.Channel(0).play(soundr,loops=-1)
             pygame.mixer.Channel(0).set_volume(0,0)
-            #pygame.mixer.Channel(0).set_volume(0,volRight)
+    
             rchan = 0
             
-    #channelc = pygame.mixer.Channel(1).play(soundr,loops=-1)
-    #pygame.time.delay(delayc)
     if not cp:
         if cchan == 1:      
             pygame.mixer.Channel(3).stop
@@ -155,14 +142,6 @@ def sound_load(sample_array_r, sample_array_c, volLeft, volRight,rp,cp,delayc,rc
             pygame.mixer.Channel(1).play(soundc,loops=-1)
             pygame.mixer.Channel(1).set_volume(0,0)
             cchan = 1
-    #channelc.set_volume(volLeft,0)
-        #pygame.mixer.Channel(1).set_volume(volLeft,0)
-##    pygame.mixer.Channel(2).play(soundc,loops=-1)
-##    #channelc.set_volume(volLeft,0)
-##    pygame.mixer.Channel(2).set_volume(volLeft,0)
-    
-    #pygame.time.delay(ms)
-    #sound.stop()
             
     return(rchan,cchan)
 
@@ -304,7 +283,7 @@ c,r = trunc_divmod(pos[0]-1,pixels)
 
 rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
     
-pygame.time.delay(120)
+pygame.time.delay(120000)
 st = time.time()
 
 endprog = False
