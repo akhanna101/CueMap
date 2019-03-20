@@ -1,5 +1,5 @@
 import numpy as np
-from pygame import *
+##from pygame import *
 import pygame, time, numpy, pygame.sndarray
 import time as time
 import RPi.GPIO as GPIO
@@ -101,16 +101,17 @@ def play_for(soundr, soundc, volLeft, volRight,rp,cp,delayc):
 ##    soundc = pygame.sndarray.make_sound(sample_array_c)
     #beg = time.time()
     #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
-    if not rp:
-        pygame.mixer.Channel(0).play(soundr,loops=-1)
-        pygame.mixer.Channel(0).set_volume(0,volRight)
+   
+        if not rp:
+            pygame.mixer.Channel(0).play(soundr,loops=-1)
+            pygame.mixer.Channel(0).set_volume(0,volRight)
     #channelc = pygame.mixer.Channel(1).play(soundr,loops=-1)
     #pygame.time.delay(delayc)
-    if not cp:
-        pygame.mixer.Channel(1).stop
-        pygame.time.delay(max(0,delayc))
-        pygame.mixer.Channel(1).play(soundc,loops=-1)
-        pygame.mixer.Channel(1).set_volume(volLeft,0)
+        if not cp:
+            pygame.mixer.Channel(1).stop
+            pygame.time.delay(max(0,delayc))
+            pygame.mixer.Channel(1).play(soundc,loops=-1)
+            pygame.mixer.Channel(1).set_volume(volLeft,0)
     #channelc.set_volume(volLeft,0)
         #pygame.mixer.Channel(1).set_volume(volLeft,0)
 ##    pygame.mixer.Channel(2).play(soundc,loops=-1)
@@ -119,7 +120,71 @@ def play_for(soundr, soundc, volLeft, volRight,rp,cp,delayc):
     
     #pygame.time.delay(ms)
     #sound.stop()
+
+def sound_load(sample_array_r, sample_array_c, volLeft, volRight,rp,cp,delayc,rchan,cchan):
     
+    #pygame.mixer.Channel(1).stop
+    soundr = pygame.sndarray.make_sound(sample_array_r)
+    soundc = pygame.sndarray.make_sound(sample_array_c)
+    #beg = time.time()
+    #channelr = pygame.mixer.Channel(0).play(soundr,loops=-1)
+    if not rp:
+        if rchan == 0:    
+            pygame.mixer.Channel(2).play(soundr,loops=-1)
+            pygame.mixer.Channel(2).set_volume(0,0)
+            #pygame.mixer.Channel(2).set_volume(0,volRight)
+            rchan = 2
+        else:
+            pygame.mixer.Channel(0).play(soundr,loops=-1)
+            pygame.mixer.Channel(0).set_volume(0,0)
+            #pygame.mixer.Channel(0).set_volume(0,volRight)
+            rchan = 0
+            
+    #channelc = pygame.mixer.Channel(1).play(soundr,loops=-1)
+    #pygame.time.delay(delayc)
+    if not cp:
+        if cchan == 1:      
+            pygame.mixer.Channel(3).stop
+            pygame.time.delay(max(0,delayc))
+            pygame.mixer.Channel(3).play(soundc,loops=-1)
+            pygame.mixer.Channel(3).set_volume(0,0)
+            cchan = 3
+        else:
+            pygame.mixer.Channel(1).stop
+            pygame.time.delay(max(0,delayc))
+            pygame.mixer.Channel(1).play(soundc,loops=-1)
+            pygame.mixer.Channel(1).set_volume(0,0)
+            cchan = 1
+    #channelc.set_volume(volLeft,0)
+        #pygame.mixer.Channel(1).set_volume(volLeft,0)
+##    pygame.mixer.Channel(2).play(soundc,loops=-1)
+##    #channelc.set_volume(volLeft,0)
+##    pygame.mixer.Channel(2).set_volume(volLeft,0)
+    
+    #pygame.time.delay(ms)
+    #sound.stop()
+            
+    return(rchan,cchan)
+
+def adjust_vol(r_chan,c_chan,volr,volc,nochange_r, nochange_c):
+    
+    if not nochange_r:
+        if r_chan == 0:
+            pygame.mixer.Channel(2).set_volume(0,0)
+            pygame.mixer.Channel(0).set_volume(volr,0)
+        else:
+            pygame.mixer.Channel(0).set_volume(0,0)
+            pygame.mixer.Channel(2).set_volume(volr,0)
+            
+    if not nochange_c:
+        if c_chan == 1:
+            pygame.mixer.Channel(3).set_volume(0,0)
+            pygame.mixer.Channel(1).set_volume(volc,0)
+        else:
+            pygame.mixer.Channel(1).set_volume(0,0)
+            pygame.mixer.Channel(3).set_volume(volc,0)        
+
+
 def trunc_divmod(a, b):
     q = a / b
     q = -int(-q) if q<0 else int(q)
@@ -205,6 +270,8 @@ for p in range(pixels):
 #print(Map[3][0].shape)
 pygame.mixer.pre_init(sample_rate, -bits, 2) # 44.1kHz, 16-bit signed, stereo
 pygame.init()
+sc_size = (200,200)
+display_surf = pygame.display.set_mode(sc_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
 
 _running = True
 
@@ -224,25 +291,33 @@ offset = 0
 rp = -1
 cp = -1
 
-#This gets the sound buffer for the starting vertex
+#these set what channels are currently being used
+rchan = 0
+cchan = 1
+
+#This loads the sound onto a set of channels
+
 c,r = trunc_divmod(pos[0]-1,pixels)
-soundr = pygame.sndarray.make_sound(Map[r][0])
-soundc = pygame.sndarray.make_sound(Map[c][1])
+##soundr = pygame.sndarray.make_sound(Map[r][0])
+##soundc = pygame.sndarray.make_sound(Map[c][1])
+##play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
 
-pygame.time.delay(30000)
+rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
+    
+pygame.time.delay(120)
 st = time.time()
-<<<<<<< HEAD
 
-=======
->>>>>>> bf4667b7d75b3cf4839210a5040fa494383e4b69
+endprog = False
+
 for p in range(len(pos)):    
-    start = time.time()
+    #start = time.time()
     
     #print(p)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
     savedata(str(pos[p]-1))
-    play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
-    
+    adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
+    #play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
+    start = time.time()
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
     print(r,c)
     #play_for(Map[c][1],4000,1,0)
@@ -251,24 +326,39 @@ for p in range(len(pos)):
         GPIO.output(dipper, 1)
         savedata('F')
         print('pellet')
+        
         pygame.time.delay(FeederOn_ms)
         GPIO.output(dipper, 0)
     
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             _running = False
+            endprog = True
+            savedata('USER ENDED PROGRAM')
+            print("user ended program")
             break
-        
+            
+        if (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            endprog = True
+            savedata('USER ENDED PROGRAM')
+            print("user ended program")
+            break
+
+    print('tone:',r,' click:',c,' position:',p)
+    
     cp = c
     rp = r
     #this gets the next position
     if not p + 1 == len(pos):
         c,r = trunc_divmod(pos[p+1]-1,pixels)
-        soundr = pygame.sndarray.make_sound(Map[r][0])
-        soundc = pygame.sndarray.make_sound(Map[c][1])
+        rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
+##        soundr = pygame.sndarray.make_sound(Map[r][0])
+##        soundc = pygame.sndarray.make_sound(Map[c][1])
         #time.sleep(cueTime_ms/1000 - .001*(time.time() - start))
-
+    if endprog:
+        break
     pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
-    ##print(time.time() - start)    
+    print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
