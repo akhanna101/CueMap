@@ -282,8 +282,11 @@ c,r = trunc_divmod(pos[0]-1,pixels)
 ##play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
 
 rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
+
+##delay start of the session, but not for testing
+if not('Data/Run_0319/Test.txt' == filename):
+    pygame.time.delay(120000)
     
-pygame.time.delay(120000)
 st = time.time()
 
 endprog = False
