@@ -231,7 +231,10 @@ soundc = pygame.sndarray.make_sound(Map[c][1])
 
 pygame.time.delay(30000)
 st = time.time()
+<<<<<<< HEAD
 
+=======
+>>>>>>> bf4667b7d75b3cf4839210a5040fa494383e4b69
 for p in range(len(pos)):    
     start = time.time()
     
@@ -241,7 +244,7 @@ for p in range(len(pos)):
     play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
-    
+    print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
     if pos[p]-1 in rew:
@@ -255,9 +258,7 @@ for p in range(len(pos)):
         if event.type == pygame.QUIT:
             _running = False
             break
-    
-    print('tone:',r,' click:',c,' position:',p)
-    
+        
     cp = c
     rp = r
     #this gets the next position
