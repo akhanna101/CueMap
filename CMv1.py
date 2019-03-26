@@ -344,3 +344,11 @@ for p in range(len(pos)):
     print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
+
+###############################
+##The following code backs the data up to a USB Drive
+import shutil
+
+dest = "/media/pi/STORE N GO"
+
+shutil.copy(filename, dest)
