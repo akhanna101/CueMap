@@ -292,14 +292,14 @@ st = time.time()
 endprog = False
 
 for p in range(len(pos)):    
-    #start = time.time()
+    start = time.time()
     
     #print(p)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
     savedata(str(pos[p]-1))
     adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
     #play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
-    start = time.time()
+    #start = time.time()
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
     print(r,c)
     #play_for(Map[c][1],4000,1,0)
@@ -341,7 +341,7 @@ for p in range(len(pos)):
     if endprog:
         break
     pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
-    print(time.time() - start)    
+    #print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
 
