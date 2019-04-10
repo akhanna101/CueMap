@@ -295,16 +295,18 @@ for p in range(len(pos)):
     start = time.time()
     
     #print(p)
+    #print(pos[p])
+    #print(c*12+r)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
-    savedata(str(pos[p]-1))
+    savedata(str(pos[p]))
     adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
     #play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     #start = time.time()
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
-    print(r,c)
+    #print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
-    if pos[p]-1 in rew:
+    if pos[p] in rew:
         GPIO.output(dipper, 1)
         savedata('F')
         print('pellet')
