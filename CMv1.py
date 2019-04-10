@@ -256,8 +256,9 @@ _running = True
 
 filename, rew, pos = trajectoryInput()
 print(rew)
+
 tf = open(filename,"w")
-tf.write('START' +'\n')
+tf.write('Reward Zones: ' + str(rew) +'\n')
 tf.close()
 
 #This gets the volume file for each tone and click
