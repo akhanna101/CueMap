@@ -2,6 +2,7 @@ import pygame
 import numpy
 import time
 import pygame.sndarray
+import os
 import curses
 
 #filename = str()
@@ -21,7 +22,7 @@ max_sample_c = 2**((bits) - 1) - 1
 size = (400,400)
 pygame.mixer.pre_init(44100, -bits, 2)
 pygame.init()
-display_surf = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+#display_surf = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
 
 pixels = 12
 Map = numpy.zeros((pixels,2),dtype=object)
@@ -36,13 +37,16 @@ amps[:,1] = amp
 def Get_Volumes():
     filename_vol = 'Volumes.txt' # Determine the filename for the traininglist trajectory
     amp = 0.2;
-    
-    with open (filename_vol, 'r') as fv:
-        vols = fv.readlines()
-    
     volt = [None]*12
     volc = [None]*12
-    
+    #check if the file exists
+    if os.path.isfile(filename_vol):
+        
+        with open (filename_vol, 'r') as fv:
+            vols = fv.readlines()
+    else:
+        vols = [str(amp_start)]*24
+
     for i,line in enumerate(vols):
         if not '%' in line:
             if i < 12:
@@ -52,6 +56,7 @@ def Get_Volumes():
             else:
                 volc[i-12] = float(line)
                 print(i)
+
             
     print(volc)
     print(volt)
@@ -76,26 +81,28 @@ def getclick(sample_rate,freq,max_sample):
     #return (numpy.int16(max_sample * numpy.sin(xvalues)))
     return (numpy.stack((f, f),axis=1))
 
-def main():
+def main(stdscr):
     stdscr.nodelay(True)
     stdscr.clear
     stdscr.keypad(True)
     stdscr.idlok(1)
     stdscr.scrollok(1)
-    
     #Clicker sound value is just max sample @ different frequencies
 
     #This fills the tones first
     #start frequency
     freq = 800 #400
     cfreq = 2
-    spacing = 4/3
-
+    spacing = 1.333#4/3
+    pixels = 12
+    
     volt, volc = Get_Volumes()
     amps[:,0] = volt
     amps[:,1] = volc
-
+    
     for p in range(pixels):
+        #stdscr.addstr(str(freq))
+        #stdscr.addch('\n')
         Freq[p][0] = freq
         Freq[p][1] = cfreq
         Map[p][0] = getsin(sample_rate,freq,max_sample_t)
@@ -115,7 +122,7 @@ def main():
             
             if i == 0:
                 pygame.mixer.Channel(0).set_volume(0,amps[j][i])
-                #print(Freq[j][0])
+##                print(Freq[j][0])
                 stdscr.addstr(str(Freq[j][0]))
                 stdscr.addch('\n')
             else:
@@ -131,7 +138,7 @@ def main():
                     pygame.mixer.Channel(0).set_volume(0,amps[j][i])
                 else:
                     pygame.mixer.Channel(0).set_volume(amps[j][i],0)
-                
+
                 char = stdscr.getch()
                 
                 if char == curses.KEY_UP:
@@ -147,15 +154,17 @@ def main():
                     stdscr.addch('\n')
                     time.sleep(0.1)
                     
-                elif char == curses.RETURN:
+                elif char == curses.KEY_ENTER:
                     time.sleep(0.1)
     #               file.write(str(amps))
                     current = False
                 
-                elif char == curses.ESCAPE:
+                elif char == ord('x'):
                     pygame.display.quit()
                     pygame.quit()
-                    file.close()
+                    #file.close()
+
+
                     
 ##                for event in pygame.event.get(): 
 ##                    if (event.type == pygame.KEYDOWN and event.key == pygame.K_UP):
@@ -174,7 +183,7 @@ def main():
 ##                        pygame.display.quit()
 ##                        pygame.quit()
 ##                        file.close()
-
+##
 
     tone_click_volumes = amps.flatten(order='F')
     #volumes = open('Volumes.txt', 'w')
@@ -185,7 +194,6 @@ def main():
     pygame.quit()
     stdscr.keypad(False)
 
-curses.wrapper(main)
-                    
+curses.wrapper(main)                    
 
                 

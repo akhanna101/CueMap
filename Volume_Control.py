@@ -2,7 +2,7 @@ import pygame
 import numpy
 import time
 import pygame.sndarray
-
+import os
 
 #filename = str()
 #file = open(filename, 'w')
@@ -36,13 +36,16 @@ amps[:,1] = amp
 def Get_Volumes():
     filename_vol = 'Volumes.txt' # Determine the filename for the traininglist trajectory
     amp = 0.2;
-    
-    with open (filename_vol, 'r') as fv:
-        vols = fv.readlines()
-    
     volt = [None]*12
     volc = [None]*12
-    
+    #check if the file exists
+    if os.path.isfile(filename_vol):
+        
+        with open (filename_vol, 'r') as fv:
+            vols = fv.readlines()
+    else:
+        vols = [str(amp_start)]*24
+
     for i,line in enumerate(vols):
         if not '%' in line:
             if i < 12:
@@ -52,6 +55,7 @@ def Get_Volumes():
             else:
                 volc[i-12] = float(line)
                 print(i)
+
             
     print(volc)
     print(volt)
