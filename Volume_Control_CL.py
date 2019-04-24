@@ -131,8 +131,6 @@ def main(stdscr):
                 stdscr.addstr(str(Freq[j][1]))
                 stdscr.addch('\n')
             while current:
-    ##            sound = pygame.sndarray.make_sound(Map[j,i]) 
-    ##            pygame.mixer.Channel(0).play(sound,loops=-1)
                 time.sleep(0.01)
                 if i == 0:
                     pygame.mixer.Channel(0).set_volume(0,amps[j][i])
@@ -156,14 +154,11 @@ def main(stdscr):
                     
                 elif char == curses.KEY_ENTER:
                     time.sleep(0.1)
-    #               file.write(str(amps))
                     current = False
                 
                 elif char == ord('x'):
                     pygame.display.quit()
                     pygame.quit()
-                    #file.close()
-
 
                     
 ##                for event in pygame.event.get(): 
@@ -177,7 +172,7 @@ def main(stdscr):
 ##                        time.sleep(0.1)
 ##                    if (event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN):
 ##                        time.sleep(0.1)
-##    #                    file.write(str(amps))
+##                        file.write(str(amps))
 ##                        current = False
 ##                    if (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
 ##                        pygame.display.quit()
