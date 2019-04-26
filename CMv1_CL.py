@@ -11,6 +11,7 @@ global NPs
 
 NPs = ([], [])
 
+
 #Input output pins for the dipper and nosepoke
 dipper = 23
 nosePoke = 22
@@ -43,8 +44,9 @@ pixels = 12
 Map = numpy.empty((pixels,2),dtype=object)  
 Freq = numpy.zeros((pixels,2),dtype=float)
 
+SAVEFOLDER = 'Run_0519'
 
-def savedata(Event):
+def savedata(Event,st):
     global NPs
     t = time.time()
     tf = open(filename,"a")
@@ -179,11 +181,11 @@ def trajectoryInput():
     
     #this is added to allow for testing...
     if animal == 't' and day == 't':
-        filename_save = 'Data/Run_0319/Test.txt'
+        filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
         animal = 1
         day = 1
     else:    
-        filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+        filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
@@ -236,6 +238,14 @@ def Get_Volumes():
     return (volt,volc)
 
 def main(stdscr):
+
+    #This sets the parameters for curses
+    stdscr.nodelay(True)
+    stdscr.clear
+    stdscr.keypad(True)
+    stdscr.idlok(1)
+    stdscr.scrollok(1)
+
     
     #This fills the tones first
     #start frequency
@@ -293,7 +303,7 @@ def main(stdscr):
     rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
 
     ##delay start of the session, but not for testing
-    if not('Data/Run_0319/Test.txt' == filename):
+    if not('Data/' + SAVEFOLDER + '/Test.txt' == filename):
         pygame.time.delay(120000)
         
     st = time.time()
@@ -304,7 +314,7 @@ def main(stdscr):
         start = time.time()
         
         #print(p)
-        savedata(str(pos[p]))
+        savedata(str(pos[p]),st)
         adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
 
         _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
@@ -312,7 +322,7 @@ def main(stdscr):
         #print(time.time()-start)
         if pos[p] in rew:
             GPIO.output(dipper, 1)
-            savedata('F')
+            savedata('F',st)
             stdscr.addstr("pellet")
             stdscr.addch('\n')
             
@@ -323,7 +333,7 @@ def main(stdscr):
 
         if char == ord('x'):
             endprog = True
-            savedata('USER ENDED PROGRAM')
+            savedata('USER ENDED PROGRAM',st)
             stdscr.addstr("user ended program")
             stdscr.addch('\n')
             break
@@ -356,10 +366,13 @@ def main(stdscr):
 
         if endprog:
             break
+##        stdscr.addstr(cueTime_ms - int(1000*(time.time() - start)))
+##        stdscr.addch('\n') 
         pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
         #print(time.time() - start)    
-    savedata("end")      
-    pygame.quit()    
+    savedata("end",st)      
+    pygame.quit()
+    stdscr.keypad(False)
 
 filename, rew, pos = trajectoryInput()
 print(rew)
@@ -368,11 +381,11 @@ curses.wrapper(main)
 
 ###############################
 ##The following code backs the data up to a USB Drive
-if not (filename == 'Data/Run_0319/Test.txt'):
+if not (filename == 'Data/' + SAVEFOLDER + '/Test.txt'):
 
     import shutil
 
 
     #dest = "/media/pi/STORE N GO"
-    dest = "/mnt/DataShare"
+    dest = "/mnt/DataShare/" + SaveFolder
     shutil.copy(filename, dest)
