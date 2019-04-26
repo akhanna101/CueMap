@@ -188,7 +188,7 @@ def trajectoryInput():
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
     
-    filename_in = 'Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_in = '/mnt/DataShare/Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
@@ -368,8 +368,11 @@ curses.wrapper(main)
 
 ###############################
 ##The following code backs the data up to a USB Drive
-import shutil
+if not (filename == 'Data/Run_0319/Test.txt'):
 
-#dest = "/media/pi/STORE N GO"
-dest = "/mnt/DataShare"
-shutil.copy(filename, dest)
+    import shutil
+
+
+    #dest = "/media/pi/STORE N GO"
+    dest = "/mnt/DataShare"
+    shutil.copy(filename, dest)
