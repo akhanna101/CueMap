@@ -43,6 +43,7 @@ pixels = 12
 Map = numpy.empty((pixels,2),dtype=object)  
 Freq = numpy.zeros((pixels,2),dtype=float)
 
+
 def savedata(Event):
     global NPs
     t = time.time()
@@ -253,18 +254,21 @@ def main(stdscr):
     #print(Map[3][0].shape)
     pygame.mixer.pre_init(sample_rate, -bits, 2) # 44.1kHz, 16-bit signed, stereo
     pygame.init()
-    sc_size = (200,200)
-    display_surf = pygame.display.set_mode(sc_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+    #sc_size = (200,200)
+    #display_surf = pygame.display.set_mode(sc_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
 
     _running = True
 
-    filename, rew, pos = trajectoryInput()
-    print(rew)
+##    filename, rew, pos = trajectoryInput()
+##    print(rew)
 
     tf = open(filename,"w")
     tf.write('Reward Zones: ' + str(rew) +'\n')
     tf.close()
 
+    stdscr.addstr("Reward Zones: %s, %s, %s" % (rew[0],rew[1],rew[2]))
+    stdscr.addch('\n')
+            
     #This gets the volume file for each tone and click
     volt,volc = Get_Volumes()
     ##volt = [0.8,0.5,0.45,0.42,0.4,0.4,0.4,0.42,0.45,0.5,0.6,0.7]
@@ -317,7 +321,7 @@ def main(stdscr):
 
         char = stdscr.getch()
 
-        elif char == ord('x'):
+        if char == ord('x'):
             endprog = True
             savedata('USER ENDED PROGRAM')
             stdscr.addstr("user ended program")
@@ -357,12 +361,15 @@ def main(stdscr):
     savedata("end")      
     pygame.quit()    
 
+filename, rew, pos = trajectoryInput()
+print(rew)
+
 curses.wrapper(main)
 
 ###############################
 ##The following code backs the data up to a USB Drive
 import shutil
 
-dest = "/media/pi/STORE N GO"
-
+#dest = "/media/pi/STORE N GO"
+dest = "/mnt/DataShare"
 shutil.copy(filename, dest)
