@@ -196,7 +196,6 @@ def trajectoryInput():
     rewardIndices = []
     for i, elem in enumerate(training_list):
         if '#' in elem:
-
             rewardIndices.append(i)
 
     ##The first comment in the text file is the rat number and day, need to skip to the second line 
@@ -204,7 +203,7 @@ def trajectoryInput():
     rew = list(map(int,rew))
     
     #Separates trajectory list from reward list and turns it into pos. pos is a list of integers indicating which pixels to play
-    pos = training_list[((rewardIndices[2])+1):-1]
+    pos = training_list[((rewardIndices[2])+1):-1] #NEED TO REPLACE THE -1 INDEX WITH ELEMENT BEFORE BLOCK INDICATION
     pos = list(map(int, pos))
     
     return (filename_save, rew, pos)

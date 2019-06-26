@@ -178,7 +178,7 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    
+    Rew_Batch = input("What batch of rewards is this?")
     #this is added to allow for testing...
     if animal == 't' and day == 't':
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
@@ -190,28 +190,37 @@ def trajectoryInput():
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
     
+<<<<<<< Updated upstream
     filename_in = '/mnt/DataShare/Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+=======
+    filename_in = r'C:\Users\khannaa3\Desktop\Cue Map MATLAB\Cue Map 0319\Lists\List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+>>>>>>> Stashed changes
     
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
     
-    #Find the Rewarded Pixels based on the pixels that fall between % in our training list.
-    rewardIndices = []
-    for i, elem in enumerate(training_list):
-        if '#' in elem:
-
-            rewardIndices.append(i)
-
-    ##The first comment in the text file is the rat number and day, need to skip to the second line 
-    rew = training_list[((rewardIndices[1])+1):rewardIndices[2]]
-    rew = list(map(int,rew))
+    filename_rew = r'C:\Users\khannaa3\Desktop\Cue Map MATLAB\Cue Map 0319\Lists\Rew_Batch_' + str(Rew_Batch) + '.txt'
+    with open (filename_rew, 'r') as r:
+        rew_list = r.readlines()
+    rew = list(map(int, rew_list))
     
-    #Separates trajectory list from reward list and turns it into pos. pos is a list of integers indicating which pixels to play
-    pos = training_list[((rewardIndices[2])+1):-1]
+#       
+#    #Find the Rewarded Pixels based on the pixels that fall between # in our training list.
+#    rewardIndices = []
+#    for i, elem in enumerate(training_list):
+#        if '#' in elem:
+#            rewardIndices.append(i)
+#    ##The first comment in the text file is the rat number and day, need to skip to the second line 
+#    rew = training_list[((rewardIndices[1])+1):rewardIndices[2]]
+#    rew = list(map(int,rew))
+    
+    #Separates vertices list from reward list and turns it into pos. pos is a list of integers indicating which pixels to play
+    Vertices_Index =  training_list.index('##Vertices\n')                         
+    pos = training_list[((Vertices_Index)+1):-1]
     pos = list(map(int, pos))
-    
+     
     return (filename_save, rew, pos)
 
 
