@@ -193,9 +193,7 @@ def trajectoryInput():
 
     filename_in = '/mnt/DataShare/Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
 
-    filename_in = r'C:\Users\khannaa3\Desktop\Cue Map MATLAB\Cue Map 0319\Lists\List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
-
-    
+        
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
         #training_list = [x.strip() for x in training_list] 
