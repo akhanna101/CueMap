@@ -199,7 +199,7 @@ def trajectoryInput():
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
     
-    filename_rew = r'C:\Users\khannaa3\Desktop\Cue Map MATLAB\Cue Map 0319\Lists\Rew_Batch_' + str(Rew_Batch) + '.txt'
+    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(Rew_Batch) + '.txt'
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
     rew = list(map(int, rew_list))
