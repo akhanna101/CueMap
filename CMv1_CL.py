@@ -29,8 +29,6 @@ def IOD(a):
         if flag and NPs[1][-1] == 'O':
             return
         NPs[1].append('O')
-        stdscr.addstr("poke out")
-        stdscr.addch('\n')
         
     else:
         if flag and NPs[1][-1] == 'I':
@@ -65,7 +63,10 @@ def savedata(Event,st):
     t = time.time()
     tf = open(filename,"a")
     for x in range(len(NPs[0])):
-        
+        if NPs[1][x] == 'O':
+            stdscr.addstr("poke out")
+            stdscr.addch('\n')
+            
         tf.write(str(NPs[0][x]-st) + "   " + NPs[1][x] + '\n')
 
     NPs = ([],[])
