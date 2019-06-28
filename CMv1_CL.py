@@ -13,8 +13,8 @@ NPs = ([], [])
 
 
 #Input output pins for the dipper and nosepoke
-dipper = 23
-nosePoke = 22
+dipper = 13
+nosePoke = 27
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -23,9 +23,9 @@ def IOD(a):
     NPs[0].append(time.time())
     
     if GPIO.input(nosePoke):
-        NPs[1].append('I')
-    else:
         NPs[1].append('O')
+    else:
+        NPs[1].append('I')
 
   
 GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=10)
@@ -198,8 +198,9 @@ def trajectoryInput():
         training_list = f.readlines()
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
-    
-    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(Rew_Batch) + '.txt'
+
+    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(Rew_Batch) + '.txt' # Determine the filename for the traininglist trajectory
+
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
     rew = list(map(int, rew_list))
@@ -283,7 +284,7 @@ def main(stdscr):
     tf.write('Reward Zones: ' + str(rew) +'\n')
     tf.close()
 
-    stdscr.addstr("Reward Zones: %s, %s, %s" % (rew[0],rew[1],rew[2]))
+    stdscr.addstr("Reward Zones:" + str(rew))
     stdscr.addch('\n')
             
     #This gets the volume file for each tone and click
@@ -320,14 +321,15 @@ def main(stdscr):
     for p in range(len(pos)):    
         start = time.time()
         
-        #print(p)
+##        stdscr.addstr(str(pos[p]))
+##        stdscr.addch('\n')
         savedata(str(pos[p]),st)
         adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
 
         _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
         #print(r,c)
         #print(time.time()-start)
-        if pos[p] in rew:
+        if pos[p]-1 in rew:
             GPIO.output(dipper, 1)
             savedata('F',st)
             stdscr.addstr("pellet")
@@ -361,7 +363,7 @@ def main(stdscr):
 ##                break
 ##
 ##        print('tone:',r,' click:',c,' position:',p)
-        stdscr.addstr('tone: %s, click: %s, position: %s' % (r,c,p))
+        stdscr.addstr('tone: %s, click: %s, vertex: %s, position: %s' % (r,c,pos[p]-1,p))
         stdscr.addch('\n')
             
         cp = c
@@ -387,7 +389,7 @@ print(rew)
 curses.wrapper(main)
 
 ###############################
-##The following code backs the data up to a USB Drive
+##The following code backs the data up to a shared network folder
 if not (filename == 'Data/' + SAVEFOLDER + '/Test.txt'):
 
     import shutil
