@@ -7,10 +7,8 @@ import os
 import curses
 #a
 os.nice = -40
-global NPs
 
 NPs = ([], [])
-
 
 #Input output pins for the dipper and nosepoke
 dipper = 13
@@ -58,14 +56,14 @@ Freq = numpy.zeros((pixels,2),dtype=float)
 
 SAVEFOLDER = 'Run_0519'
 
-def savedata(Event,st):
+def savedata(Event,st,pr):
     global NPs
     t = time.time()
     tf = open(filename,"a")
     for x in range(len(NPs[0])):
         if NPs[1][x] == 'O':
-            stdscr.addstr("poke out")
-            stdscr.addch('\n')
+            pr.addstr("poke out")
+            pr.addch('\n')
             
         tf.write(str(NPs[0][x]-st) + "   " + NPs[1][x] + '\n')
 
@@ -338,7 +336,7 @@ def main(stdscr):
         
 ##        stdscr.addstr(str(pos[p]))
 ##        stdscr.addch('\n')
-        savedata(str(pos[p]),st)
+        savedata(str(pos[p]),st,stdscr)
         adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
 
         _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
