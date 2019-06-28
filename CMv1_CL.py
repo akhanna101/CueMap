@@ -38,7 +38,7 @@ def IOD(a):
         
         
   
-GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=xIOD, bouncetime=50)
+GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=50)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
 GPIO.output(dipper, 0)
 
