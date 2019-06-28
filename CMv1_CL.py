@@ -22,7 +22,7 @@ GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 def IOD(a):
     if len(NPs[0]) == 0:
         flag = False
-    else 
+    else: 
         flag = True
         
     if GPIO.input(nosePoke):
