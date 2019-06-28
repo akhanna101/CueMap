@@ -38,7 +38,7 @@ def IOD(a):
         
         
   
-GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=50)
+GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=xIOD, bouncetime=50)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
 GPIO.output(dipper, 0)
 
@@ -56,15 +56,12 @@ Freq = numpy.zeros((pixels,2),dtype=float)
 
 SAVEFOLDER = 'Run_0519'
 
-def savedata(Event,st,pr):
+def savedata(Event,st):
     global NPs
     t = time.time()
     tf = open(filename,"a")
     for x in range(len(NPs[0])):
-        if NPs[1][x] == 'O':
-            pr.addstr("poke out")
-            pr.addch('\n')
-            
+
         tf.write(str(NPs[0][x]-st) + "   " + NPs[1][x] + '\n')
 
     NPs = ([],[])
@@ -344,7 +341,7 @@ def main(stdscr):
         #print(time.time()-start)
         if pos[p]-1 in rew:
             GPIO.output(dipper, 1)
-            savedata('F',st,stdscr)
+            savedata('F',st)
             stdscr.addstr("pellet")
             stdscr.addch('\n')
             
@@ -355,7 +352,7 @@ def main(stdscr):
 
         if char == ord('x'):
             endprog = True
-            savedata('USER ENDED PROGRAM',st,stdscr)
+            savedata('USER ENDED PROGRAM',st)
             stdscr.addstr("user ended program")
             stdscr.addch('\n')
             break
@@ -392,7 +389,7 @@ def main(stdscr):
 ##        stdscr.addch('\n') 
         pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
         #print(time.time() - start)    
-    savedata("end",st,stdscr)      
+    savedata("end",st)      
     pygame.quit()
     stdscr.keypad(False)
 
