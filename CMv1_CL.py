@@ -14,7 +14,7 @@ NPs = ([], [])
 
 #Input output pins for the dipper and nosepoke
 dipper = 13
-nosePoke = 27
+nosePoke = 22
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
