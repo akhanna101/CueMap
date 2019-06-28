@@ -29,6 +29,8 @@ def IOD(a):
         if flag and NPs[1][-1] == 'O':
             return
         NPs[1].append('O')
+        stdscr.addstr("poke out")
+        stdscr.addch('\n')
         
     else:
         if flag and NPs[1][-1] == 'I':
