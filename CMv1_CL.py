@@ -327,7 +327,7 @@ def main(stdscr):
         
 ##        stdscr.addstr(str(pos[p]))
 ##        stdscr.addch('\n')
-        savedata(str(pos[p]),st,stdscr)
+        savedata(str(pos[p]),st)
         adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
 
         _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
