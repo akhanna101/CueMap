@@ -18,19 +18,13 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def IOD(a):
-    if len(NPs[0]) == 0:
-        flag = False
-    else: 
-        flag = True
-        
+
     if GPIO.input(nosePoke):
-        if flag and NPs[1][-1] == 'O':
-            return
+
         NPs[1].append('O')
         
     else:
-        if flag and NPs[1][-1] == 'I':
-            return
+
         NPs[1].append('I')
     
     NPs[0].append(time.time())
