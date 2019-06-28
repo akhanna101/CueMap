@@ -344,7 +344,7 @@ def main(stdscr):
         #print(time.time()-start)
         if pos[p]-1 in rew:
             GPIO.output(dipper, 1)
-            savedata('F',st)
+            savedata('F',st,stdscr)
             stdscr.addstr("pellet")
             stdscr.addch('\n')
             
@@ -355,7 +355,7 @@ def main(stdscr):
 
         if char == ord('x'):
             endprog = True
-            savedata('USER ENDED PROGRAM',st)
+            savedata('USER ENDED PROGRAM',st,stdscr)
             stdscr.addstr("user ended program")
             stdscr.addch('\n')
             break
@@ -392,7 +392,7 @@ def main(stdscr):
 ##        stdscr.addch('\n') 
         pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
         #print(time.time() - start)    
-    savedata("end",st)      
+    savedata("end",st,stdscr)      
     pygame.quit()
     stdscr.keypad(False)
 
