@@ -396,5 +396,5 @@ import shutil
 
 
     #dest = "/media/pi/STORE N GO"
-dest = "/mnt/DataShare/" + SaveFolder
+dest = "/mnt/DataShare/"# + SaveFolder
 shutil.copy(filename, dest)
