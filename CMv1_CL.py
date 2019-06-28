@@ -23,10 +23,17 @@ def IOD(a):
     NPs[0].append(time.time())
     
     if GPIO.input(nosePoke):
+        if NPs[1][-1] == 'O':
+            return
         NPs[1].append('O')
+        
     else:
+        if NPs[1][-1] == 'I':
+            return
         NPs[1].append('I')
-
+        
+        
+        
   
 GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=50)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
