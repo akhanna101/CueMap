@@ -390,11 +390,11 @@ curses.wrapper(main)
 
 ###############################
 ##The following code backs the data up to a shared network folder
-if not (filename == 'Data/' + SAVEFOLDER + '/Test.txt'):
+##if not (filename == 'Data/' + SAVEFOLDER + '/Test.txt'):
 
-    import shutil
+import shutil
 
 
     #dest = "/media/pi/STORE N GO"
-    dest = "/mnt/DataShare/" + SaveFolder
-    shutil.copy(filename, dest)
+dest = "/mnt/DataShare/" + SaveFolder
+shutil.copy(filename, dest)
