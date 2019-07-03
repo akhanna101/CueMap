@@ -13,6 +13,11 @@ NPs = ([], [])
 dipper = 23
 nosePoke = 22
 
+#this sets the pins for plexon
+strobe = 12
+plx_word = [13, 14, 15, 16, 17, 18, 19, 20]
+npout = 21
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
@@ -21,13 +26,26 @@ def IOD(a):
     
     if GPIO.input(nosePoke):
         NPs[1].append('I')
+        ##GPIO.output(npout, True)
     else:
         NPs[1].append('O')
-
+        ##GPIO.output(npout, False)
   
 GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=10)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
 GPIO.output(dipper, 0)
+
+GPIO.setup(strobe, GPIO.OUT)
+GPIO.output(strobe, 0)
+
+##GPIO.setup(npout, GPIO.OUT)
+##GPIO.output(npout, 0)
+
+for i in range(8):
+    GPIO.setup(plx_word[i], GPIO.OUT)
+    GPIO.output(plx_word[i], 0)
+
+    
 
 cueTime_ms = 3000
 FeederOn_ms = 500
@@ -171,8 +189,16 @@ def trunc_divmod(a, b):
     return q, r
 
 
+def send_plx_word(vertex):
 
-
+    #check to make this faster
+    for i in range(8):
+        GPIO.output(plx_word[i], bool(vertex & (1<<i)))
+    #to keep the code faster, the strobe will be sent at a different time then the bit setting,
+        #so the following lines are commented out
+##    GPIO.output(strobe, True)    
+##    time.sleep(0.0001)
+##    GPIO.output(strobe, False)  
 
 
 
@@ -298,6 +324,9 @@ c,r = trunc_divmod(pos[0]-1,pixels)
 
 rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
 
+#This gets the buffer ready to send to Plexon
+send_plx_word(pos[0]-1)
+
 ##delay start of the session, but not for testing
 if not('Data/Run_0319/Test.txt' == filename):
     pygame.time.delay(120000)
@@ -314,10 +343,12 @@ for p in range(len(pos)):
     #print(c*12+r)
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
     savedata(str(pos[p]))
+    GPIO.output(strobe, True) 
     adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
     #play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     #start = time.time()
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
+    GPIO.output(strobe, False) 
     #print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
@@ -350,11 +381,17 @@ for p in range(len(pos)):
     rp = r
     #this gets the next position
     if not p + 1 == len(pos):
-        c,r = trunc_divmod(pos[p+1]-1,pixels)
+        c,r = trunc_divmod(,pixels)
+
+        #This gets the sound buffer ready for the next position
         rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
 ##        soundr = pygame.sndarray.make_sound(Map[r][0])
 ##        soundc = pygame.sndarray.make_sound(Map[c][1])
         #time.sleep(cueTime_ms/1000 - .001*(time.time() - start))
+
+        #This sets the output but word for Plexon for the next position. The strobe channel sends this buffer.
+        send_plx_word(pos[p+1]-1)
+        
     if endprog:
         break
     pygame.time.delay(cueTime_ms - int(1000*(time.time() - start)))
