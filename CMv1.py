@@ -14,8 +14,8 @@ dipper = 23
 nosePoke = 22
 
 #this sets the pins for plexon
-strobe = 12
-plx_word = [13, 14, 15, 16, 17, 18, 19, 20]
+strobe = 2
+plx_word = [3, 4, 5, 6, 12, 13, 16, 26]
 npout = 21
 
 GPIO.setmode(GPIO.BCM)
