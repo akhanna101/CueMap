@@ -178,7 +178,7 @@ def trajectoryInput():
     if animal == 't' and day == 't':
         filename_save = 'Data/Run_0319/Test.txt'
         animal = 1
-        day = 1
+        day = 35
     else:    
         filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
