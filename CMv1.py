@@ -381,7 +381,7 @@ for p in range(len(pos)):
     rp = r
     #this gets the next position
     if not p + 1 == len(pos):
-        c,r = trunc_divmod(,pixels)
+        c,r = trunc_divmod(pos[p+1]-1,pixels)
 
         #This gets the sound buffer ready for the next position
         rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,int(Freq[c][1] - offset),rchan,cchan)
