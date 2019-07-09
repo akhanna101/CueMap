@@ -26,10 +26,10 @@ def IOD(a):
     
     if GPIO.input(nosePoke):
         NPs[1].append('I')
-        ##GPIO.output(npout, True)
+        GPIO.output(npout, True)
     else:
         NPs[1].append('O')
-        ##GPIO.output(npout, False)
+        GPIO.output(npout, False)
   
 GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=10)
 GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
@@ -38,8 +38,8 @@ GPIO.output(dipper, 0)
 GPIO.setup(strobe, GPIO.OUT)
 GPIO.output(strobe, 0)
 
-##GPIO.setup(npout, GPIO.OUT)
-##GPIO.output(npout, 0)
+GPIO.setup(npout, GPIO.OUT)
+GPIO.output(npout, 0)
 
 for i in range(8):
     GPIO.setup(plx_word[i], GPIO.OUT)
