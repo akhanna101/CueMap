@@ -211,10 +211,11 @@ def trajectoryInput():
     day = input("What day of training is this?")
     Rew_Batch = input("What batch of rewards is this?")
     
-    # allows animals 9-16 to pull trajectories from 1-8:
-    route = int(animal)
-    if animal != 't' and route > 8:
-            route %= 8
+##    # allows animals 9-16 to pull trajectories from 1-8:
+##    if animal != 't':
+##        route = int(animal)
+##        if route > 8:
+##            route %= 8
         
     #this is added to allow for testing...
     if animal == 't' and day == 't':
@@ -223,7 +224,10 @@ def trajectoryInput():
         day = 1
     
         
-    else:   
+    else:
+        route = int(animal)
+        if route >8:
+            route %= 8
         filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
         
     
@@ -239,7 +243,7 @@ def trajectoryInput():
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
     
-    filename_rew = 'Lists/Rew_Batch' + str(Rew_Batch) + '.txt'
+    filename_rew = 'Lists/Rew_Batch_' + str(Rew_Batch) + '.txt'
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
     rew = list(map(int, rew_list))
