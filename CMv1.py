@@ -17,6 +17,7 @@ nosePoke = 22
 strobe = 4
 plx_word = [5,6,12,13,15,17,24,25]
 npout = 27
+rstart = 10
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -32,7 +33,7 @@ def IOD(a):
         GPIO.output(npout, False)
   
 GPIO.add_event_detect(nosePoke, GPIO.BOTH, callback=IOD, bouncetime=10)
-GPIO.setup(dipper, GPIO.OUT) # UPDATE PIN OUT FOR DIPPER
+GPIO.setup(dipper, GPIO.OUT) 
 GPIO.output(dipper, 0)
 
 GPIO.setup(strobe, GPIO.OUT)
@@ -40,6 +41,9 @@ GPIO.output(strobe, 0)
 
 GPIO.setup(npout, GPIO.OUT)
 GPIO.output(npout, 0)
+
+GPIO.setup(rstart, GPIO.OUT)
+GPIO.output(rstart, 1)
 
 for i in range(8):
     GPIO.setup(plx_word[i], GPIO.OUT)
@@ -398,6 +402,8 @@ for p in range(len(pos)):
     #print(time.time() - start)    
 savedata("end")      
 pygame.quit()    
+
+GPIO.output(rstart, 0)
 
 ###############################
 ##The following code backs the data up to a USB Drive
