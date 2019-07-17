@@ -188,6 +188,12 @@ def trajectoryInput():
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
         animal = 1
         day = 1
+        
+    # animals 9-16 use same routes as 1-8, but save in separate files:
+    route = int(animal)
+    if route > 8:
+        route %= 8
+    
     else:    
         filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
@@ -195,7 +201,7 @@ def trajectoryInput():
     filename = checkfilename(filename_save)
     
 
-    filename_in = '/mnt/DataShare/Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_in = '/mnt/DataShare/Lists/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
 
         
     with open (filename_in, 'r') as f:
