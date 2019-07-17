@@ -316,6 +316,9 @@ def main(stdscr):
 
     ##delay start of the session, but not for testing
     if not('Data/' + SAVEFOLDER + '/Test.txt' == filename):
+              
+        stdscr.addstr(str("Waiting Two Minutes"))
+        stdscr.addch('\n')
         pygame.time.delay(120000)
         
     st = time.time()
