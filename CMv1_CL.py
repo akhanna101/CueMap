@@ -257,7 +257,9 @@ def main(stdscr):
     stdscr.keypad(True)
     stdscr.idlok(1)
     stdscr.scrollok(1)
-
+    stdscr.addch('\n')
+    stdscr.addstr("Waiting Two Minutes")
+    stdscr.addch('\n')
     
     #This fills the tones first
     #start frequency
@@ -317,9 +319,6 @@ def main(stdscr):
     ##delay start of the session, but not for testing
     if not('Data/' + SAVEFOLDER + '/Test.txt' == filename):
               
-        stdscr.addstr("Waiting Two Minutes")
-        stdscr.addch('\n')
-        pygame.time.delay(1000)
         pygame.time.delay(120000)
         
     st = time.time()
