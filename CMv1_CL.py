@@ -319,6 +319,7 @@ def main(stdscr):
               
         stdscr.addstr("Waiting Two Minutes")
         stdscr.addch('\n')
+        pygame.time.delay(1000)
         pygame.time.delay(120000)
         
     st = time.time()
