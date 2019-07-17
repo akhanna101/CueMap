@@ -257,9 +257,6 @@ def main(stdscr):
     stdscr.keypad(True)
     stdscr.idlok(1)
     stdscr.scrollok(1)
-    stdscr.addch('\n')
-    stdscr.addstr("Waiting Two Minutes")
-    stdscr.addch('\n')
     
     #This fills the tones first
     #start frequency
