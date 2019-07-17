@@ -183,16 +183,18 @@ def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
     Rew_Batch = input("What batch of rewards is this?")
+    
+    # animals 9-16 use same routes as 1-8, but save in separate files:
+    route = int(animal)
+    if route > 8:
+        route %= 8
+    
     #this is added to allow for testing...
     if animal == 't' and day == 't':
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
         animal = 1
         day = 1
-        
-    # animals 9-16 use same routes as 1-8, but save in separate files:
-    route = int(animal)
-    if route > 8:
-        route %= 8
+       
     
     else:    
         filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
