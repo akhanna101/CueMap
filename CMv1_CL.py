@@ -201,7 +201,7 @@ def trajectoryInput():
         animal = 1
         day = 1
     else:    
-        filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+        filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
