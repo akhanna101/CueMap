@@ -211,11 +211,17 @@ def trajectoryInput():
     day = input("What day of training is this?")
     Rew_Batch = input("What batch of rewards is this?")
     
+    route = animal
+    if int(route) > 8:
+        route %= 8
+        
     #this is added to allow for testing...
     if animal == 't' and day == 't':
         filename_save = 'Data/Run_0319/Test.txt'
         animal = 1
         day = 1
+    
+        
     else:   
         filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
         
@@ -224,7 +230,7 @@ def trajectoryInput():
     filename = checkfilename(filename_save)
     
 
-    filename_in = 'Lists/List_' + str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_in = 'Lists/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
 
         
     with open (filename_in, 'r') as f:
