@@ -192,15 +192,13 @@ def trajectoryInput():
     
     # allows animals 9-16 to pull trajectories from 1-8:
     route = animal
-    if isinstance(animal, int):
-        if route > 8:
+    if isinstance(animal, int) and route > 8:
             route %= 8
     
     #this is added to allow for testing...
     if animal == 't' and day == 't':
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
         route = 1
-        # animal = 1
         day = 1
     else:    
         filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
