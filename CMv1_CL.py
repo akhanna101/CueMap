@@ -203,7 +203,7 @@ def trajectoryInput():
     filename = checkfilename(filename_save)
     
 
-    filename_in = '/mnt/DataShare/Lists/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_in = '/mnt/DataShare/Lists_RW/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
 
         
     with open (filename_in, 'r') as f:
