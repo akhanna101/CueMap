@@ -192,7 +192,7 @@ def trajectoryInput():
     
     # allows animals 9-16 to pull trajectories from 1-8:
     route = animal
-    if isinstance(animal, int) and route > 8:
+    if animal != 't' and route > 8:
             route %= 8
     
     #this is added to allow for testing...
