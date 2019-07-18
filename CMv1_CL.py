@@ -199,7 +199,8 @@ def trajectoryInput():
     #this is added to allow for testing...
     if animal == 't' and day == 't':
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
-        animal = 1
+        route = 1
+        # animal = 1
         day = 1
     else:    
         filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
