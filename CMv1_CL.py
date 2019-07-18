@@ -18,13 +18,19 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def IOD(a):
-
+    if len(NPs[0]) == 0:
+        flag = False
+    else: 
+        flag = True
+        
     if GPIO.input(nosePoke):
-
+        if flag and NPs[1][-1] == 'O':
+            return
         NPs[1].append('O')
         
     else:
-
+        if flag and NPs[1][-1] == 'I':
+            return
         NPs[1].append('I')
     
     NPs[0].append(time.time())
@@ -184,8 +190,8 @@ def trajectoryInput():
     day = input("What day of training is this?")
     Rew_Batch = input("What batch of rewards is this?")
     
-    # animals 9-16 use same routes as 1-8, but save in separate files:
-    route = int(animal)
+    # allows animals 9-16 to pull trajectories from 1-8:
+    route = animal
     if route > 8:
         route %= 8
     
@@ -194,10 +200,8 @@ def trajectoryInput():
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
         animal = 1
         day = 1
-       
-    
     else:    
-        filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+        filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
@@ -265,6 +269,7 @@ def main(stdscr):
     stdscr.keypad(True)
     stdscr.idlok(1)
     stdscr.scrollok(1)
+
     
     #This fills the tones first
     #start frequency
@@ -323,7 +328,6 @@ def main(stdscr):
 
     ##delay start of the session, but not for testing
     if not('Data/' + SAVEFOLDER + '/Test.txt' == filename):
-              
         pygame.time.delay(120000)
         
     st = time.time()
