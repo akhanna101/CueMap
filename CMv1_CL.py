@@ -191,9 +191,10 @@ def trajectoryInput():
     Rew_Batch = input("What batch of rewards is this?")
     
     # allows animals 9-16 to pull trajectories from 1-8:
-    route = int(animal)
-    if route > 8:
-        route %= 8
+    if isinstance(animal, int):
+        route = animal
+        if route > 8:
+            route %= 8
     
     #this is added to allow for testing...
     if animal == 't' and day == 't':
