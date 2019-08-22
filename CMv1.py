@@ -22,6 +22,19 @@ rstart = 10
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(nosePoke, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+#this dictionary keeps track of the different list folders
+ListFolders = {
+    0: 'Random Walk Only',
+    1: 'Trajectories Only',
+    2: 'Random Jump Only',
+    3: 'RW with Traj',
+    4: 'RW with RJ',
+    }
+
+ListTrackTypes = ['RW', 'Traj', 'RJ', 'RW+Traj', 'RW+RJ']
+
+#ListTypes
+
 def IOD(a):
     NPs[0].append(time.time())
     
@@ -87,7 +100,27 @@ def checkfilename(filename):
         filenameuse = filename + '_' + str(n)
     return(filenameuse)    
 
-
+def  getlistfilename(day,ListFolder,ListTrackTypes):
+    #fiirst determine which list the current rat is on
+    with open('Lists/ExperimentList.txt','r') as f
+  
+        rlist = f.readlines()
+        #This loops through each line
+        for line in rlist:
+            sep = line.split(",")
+            #check whether the day matches the first value in the line
+            if str(day) == sep[0]:
+                #second value is the list number and the third input is the list type
+                listnum = sep[1]
+                listtype = sep[2]
+                
+                for li,LTT in enumerate(ListTrackTypes):
+                    if listtype == LTT + '\n':
+                        listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+                        break      
+                break
+            
+    return(listfile)
 
 def getsin(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
@@ -208,7 +241,7 @@ def send_plx_word(vertex):
 
 def trajectoryInput():
     animal = input("What animal is this?")
-    day = input("What day of training is this?")
+    day = input("What day of training is this?") 
     Rew_Batch = input("What batch of rewards is this?")
     
 ##    # allows animals 9-16 to pull trajectories from 1-8:
@@ -222,7 +255,7 @@ def trajectoryInput():
         filename_save = 'Data/Run_0319/Test.txt'
         route = 1
         day = 1
-    
+        listtype = 1 
         
     else:
         route = int(animal)
@@ -234,8 +267,8 @@ def trajectoryInput():
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
     
-
-    filename_in = 'Lists/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    
+    filename_in = getlistfilename(day,ListFolders,ListTrackTypes)
 
         
     with open (filename_in, 'r') as f:
