@@ -261,8 +261,10 @@ def trajectoryInput():
         route = int(animal)
         if route >8:
             route %= 8
+            if route == 0:
+                route = 8
         filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
-        
+    
     
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
