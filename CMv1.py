@@ -269,7 +269,8 @@ def trajectoryInput():
     
     
     filename_in = getlistfilename(day,route,ListFolders,ListTrackTypes)
-
+    #this prints the list which will be used for the current session
+    print(filename_in)
         
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
