@@ -27,8 +27,8 @@ ListFolders = {
     0: 'Random Walk Only',
     1: 'Trajectories Only',
     2: 'Random Jump Only',
-    3: 'RW with Traj',
-    4: 'RW with RJ',
+    3: 'RW and Traj',
+    4: 'RW and RJ',
     }
 
 ListTrackTypes = ['RW', 'Traj', 'RJ', 'RW+Traj', 'RW+RJ']
@@ -100,26 +100,26 @@ def checkfilename(filename):
         filenameuse = filename + '_' + str(n)
     return(filenameuse)    
 
-def  getlistfilename(day,ListFolder,ListTrackTypes):
+def  getlistfilename(day,route,ListFolder,ListTrackTypes):
     #fiirst determine which list the current rat is on
-    with open('Lists/ExperimentList.txt','r') as f
+    f = open('Lists/ExperimentLists.txt','r') 
   
-        rlist = f.readlines()
+    rlist = f.readlines()
         #This loops through each line
-        for line in rlist:
-            sep = line.split(",")
+    for line in rlist:
+        sep = line.split(",")
             #check whether the day matches the first value in the line
-            if str(day) == sep[0]:
+        if str(day) == sep[0]:
                 #second value is the list number and the third input is the list type
-                listnum = sep[1]
-                listtype = sep[2]
+            listnum = sep[1]
+            listtype = sep[2]
                 
-                for li,LTT in enumerate(ListTrackTypes):
-                    if listtype == LTT + '\n':
-                        listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
-                        break      
-                break
-            
+            for li,LTT in enumerate(ListTrackTypes):
+                if listtype == LTT + '\n':
+                    listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+                    break      
+            break
+    f.close()     
     return(listfile)
 
 def getsin(sample_rate,freq,max_sample):
@@ -268,7 +268,7 @@ def trajectoryInput():
     filename = checkfilename(filename_save)
     
     
-    filename_in = getlistfilename(day,ListFolders,ListTrackTypes)
+    filename_in = getlistfilename(day,route,ListFolders,ListTrackTypes)
 
         
     with open (filename_in, 'r') as f:

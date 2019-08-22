@@ -10,10 +10,10 @@ f.write('#EXPERIMENT LISTS\n')
 #RJ: Random Jump
 
 #This list keeps track of which list type to use
-ListType = ['RW+Traj', 'RW+RJ', 'RW','RW+Traj']
+ListType = ['RW+Traj', 'RW+RJ', 'RW','RW+Traj','RW+RJ', 'RW','RW+Traj']
 
 #This list tracks how many sessions to take for the above List Types
-ListNumber = [24, 3, 6,10]
+ListNumber = [24, 3, 10, 6, 3, 10, 6]
 
 #This keeps track of which number the list is currently on
 ListTrack = [0, 0, 0, 0, 0]
