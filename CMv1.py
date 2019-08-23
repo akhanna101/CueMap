@@ -116,7 +116,7 @@ def  getlistfilename(day,route,ListFolder,ListTrackTypes):
                 
             for li,LTT in enumerate(ListTrackTypes):
                 if listtype == LTT + '\n':
-                    listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+                    listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(listnum) + '.txt' # Determine the filename for the traininglist trajectory
                     break      
             break
     f.close()     
@@ -380,8 +380,25 @@ send_plx_word(pos[0]-1)
 
 ##delay start of the session, but not for testing
 if not('Data/Run_0319/Test.txt' == filename):
-    pygame.time.delay(120000)
-    
+    ##pygame.time.delay(120000)
+    st = time.time()
+    while st + 120000 > time.time():
+        pygame.time.delay(10)
+##        for event in pygame.event.get():
+##            if event.type == pygame.QUIT:
+##                _running = False
+##                endprog = True
+##                savedata('USER ENDED PROGRAM')
+##                print("user ended program")
+##                break
+##                
+##            if (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+##                endprog = True
+##                savedata('USER ENDED PROGRAM')
+##                print("user ended program")
+##                break
+            
+        
 st = time.time()
 
 endprog = False
