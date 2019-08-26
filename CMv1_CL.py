@@ -214,7 +214,7 @@ def trajectoryInput():
     tr_rats = ['84','93','86','95']
     for tr in tr_rats:
         if animal == tr:
-            filename_in = 'Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 20) + '.txt' # Determine the filename for the traininglist trajectory
+            filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 20) + '.txt' # Determine the filename for the traininglist trajectory
             break    
     print(filename_in)
 
