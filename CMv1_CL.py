@@ -216,8 +216,8 @@ def trajectoryInput():
         if animal == tr:
             filename_in = 'Lists_RW_Traj/List_' + str(route) + '_' + str(day - 20) + '.txt' # Determine the filename for the traininglist trajectory
             break    
+    print(filename_in)
 
-        
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
         #training_list = [x.strip() for x in training_list] 
