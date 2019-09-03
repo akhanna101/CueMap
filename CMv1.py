@@ -245,7 +245,7 @@ def send_plx_word(vertex):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?") 
-    Rew_Batch = input("What batch of rewards is this?")
+##    Rew_Batch = input("What batch of rewards is this?")
     
 ##    # allows animals 9-16 to pull trajectories from 1-8:
 ##    if animal != 't':
