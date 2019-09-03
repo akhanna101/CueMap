@@ -257,7 +257,7 @@ def trajectoryInput():
         
     #this is added to allow for testing...
     if animal == 't' and day == 't':
-        filename_save = 'Data/Run_0819/Test.txt'
+        filename = 'Data/Run_0819/Test.txt'
         route = 1
         day = 1
         listtype = 1 
@@ -269,10 +269,8 @@ def trajectoryInput():
             if route == 0:
                 route = 8
         filename_save = 'Data/Run_0819/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
-    
-    
-    #check to make sure there isn't a filename already with that name
-    filename = checkfilename(filename_save)
+        #check to make sure there isn't a filename already with that name
+        filename = checkfilename(filename_save)
     
     
     filename_in,rewardset = getlistfilename(day,route,ListFolders,ListTrackTypes)
@@ -388,7 +386,7 @@ rchan,cchan = sound_load(Map[r][0], Map[c][1], volt[r], volc[c],rp == r,cp == c,
 send_plx_word(pos[0]-1)
 
 ##delay start of the session, but not for testing
-if not('Data/Run_0319/Test.txt' == filename):
+if not('Data/Run_0819/Test.txt' == filename):
     ##pygame.time.delay(120000)
     st = time.time()
     while st + 120 > time.time():
