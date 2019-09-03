@@ -7,6 +7,8 @@ import os
 os.nice = -10
 global NPs
 
+GPIO.setwarnings(False)
+
 NPs = ([], [])
 
 #Input output pins for the dipper and nosepoke
@@ -97,7 +99,7 @@ def checkfilename(filename):
     n = 0
     while os.path.isfile(filenameuse):
         n += 1
-        filenameuse = filename + '_' + str(n)
+        filenameuse = filename[:-4] + '_' + str(n) + '.txt'
     return(filenameuse)    
 
 def  getlistfilename(day,route,ListFolder,ListTrackTypes):
@@ -118,7 +120,7 @@ def  getlistfilename(day,route,ListFolder,ListTrackTypes):
             rewardset = sep[3]
             
             for li,LTT in enumerate(ListTrackTypes):
-                if listtype == LTT + '\n':
+                if listtype == LTT:# + '\n':
                     listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(listnum) + '.txt' # Determine the filename for the traininglist trajectory
                     break      
             break
@@ -255,7 +257,7 @@ def trajectoryInput():
         
     #this is added to allow for testing...
     if animal == 't' and day == 't':
-        filename_save = 'Data/Run_0319/Test.txt'
+        filename_save = 'Data/Run_0819/Test.txt'
         route = 1
         day = 1
         listtype = 1 
@@ -266,7 +268,7 @@ def trajectoryInput():
             route %= 8
             if route == 0:
                 route = 8
-        filename_save = 'Data/Run_0319/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+        filename_save = 'Data/Run_0819/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
     
     #check to make sure there isn't a filename already with that name
@@ -283,11 +285,12 @@ def trajectoryInput():
         #This opens the trajectory list file for that day and turns it into a list
     
     #filename_rew = 'Lists/Rew_Batch_' + str(Rew_Batch) + '.txt'
-    filename_rew = 'Lists/Batch_' + str(route) + '.txt'
+    filename_rew = 'Lists/Reward_Batches/Batch_' + str(route) + '.txt'
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
-    curr_rews = rew_list[rewardset-1] #subtract one for zero indexing - gets the current reward set
-    rew = list(map(int, curr_rews))
+    curr_rews = rew_list[int(rewardset)-1] #subtract one for zero indexing - gets the current reward set
+    #print(curr_rews)
+    rew = list(map(int, curr_rews.split(',')))
     
 #       
 #    #Find the Rewarded Pixels based on the pixels that fall between # in our training list.
@@ -304,7 +307,7 @@ def trajectoryInput():
     pos = training_list[((Vertices_Index)+1):-1]
     pos = list(map(int, pos))
      
-    return (filename_save, rew, pos)
+    return (filename, rew, pos)
 
 def Get_Volumes():
     filename_vol = 'Volumes.txt' # Determine the filename for the traininglist trajectory
@@ -351,6 +354,7 @@ display_surf = pygame.display.set_mode(sc_size, pygame.HWSURFACE | pygame.DOUBLE
 _running = True
 
 filename, rew, pos = trajectoryInput()
+print('Filename to be saved: ' + filename)
 print(rew)
 
 tf = open(filename,"w")
@@ -387,7 +391,7 @@ send_plx_word(pos[0]-1)
 if not('Data/Run_0319/Test.txt' == filename):
     ##pygame.time.delay(120000)
     st = time.time()
-    while st + 120000 > time.time():
+    while st + 10 > time.time():
         pygame.time.delay(10)
 ##        for event in pygame.event.get():
 ##            if event.type == pygame.QUIT:
