@@ -391,7 +391,7 @@ send_plx_word(pos[0]-1)
 if not('Data/Run_0319/Test.txt' == filename):
     ##pygame.time.delay(120000)
     st = time.time()
-    while st + 10 > time.time():
+    while st + 120 > time.time():
         pygame.time.delay(10)
 ##        for event in pygame.event.get():
 ##            if event.type == pygame.QUIT:
