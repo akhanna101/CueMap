@@ -110,17 +110,20 @@ def  getlistfilename(day,route,ListFolder,ListTrackTypes):
         sep = line.split(",")
             #check whether the day matches the first value in the line
         if str(day) == sep[0]:
-                #second value is the list number and the third input is the list type
+                #second value is the list number
+                #the third input is the list type
+                #fourth input is the current reward set
             listnum = sep[1]
             listtype = sep[2]
-                
+            rewardset = sep[3]
+            
             for li,LTT in enumerate(ListTrackTypes):
                 if listtype == LTT + '\n':
                     listfile = 'Lists/' + ListFolders.get(li) +'/List_' + str(route) + '_' + str(listnum) + '.txt' # Determine the filename for the traininglist trajectory
                     break      
             break
     f.close()     
-    return(listfile)
+    return(listfile,rewardset)
 
 def getsin(sample_rate,freq,max_sample):
     length = sample_rate / float(freq)
@@ -270,7 +273,7 @@ def trajectoryInput():
     filename = checkfilename(filename_save)
     
     
-    filename_in = getlistfilename(day,route,ListFolders,ListTrackTypes)
+    filename_in,rewardset = getlistfilename(day,route,ListFolders,ListTrackTypes)
     #this prints the list which will be used for the current session
     print(filename_in)
         
@@ -279,10 +282,12 @@ def trajectoryInput():
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
     
-    filename_rew = 'Lists/Rew_Batch_' + str(Rew_Batch) + '.txt'
+    #filename_rew = 'Lists/Rew_Batch_' + str(Rew_Batch) + '.txt'
+    filename_rew = 'Lists/Batch_' + str(route) + '.txt'
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
-    rew = list(map(int, rew_list))
+    curr_rews = rew_list[rewardset-1] #subtract one for zero indexing - gets the current reward set
+    rew = list(map(int, curr_rews))
     
 #       
 #    #Find the Rewarded Pixels based on the pixels that fall between # in our training list.
