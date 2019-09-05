@@ -188,7 +188,7 @@ def trunc_divmod(a, b):
 def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
-    Rew_Batch = input("What batch of rewards is this?")
+#    Rew_Batch = input("What batch of rewards is this?")
     
       
     #this is added to allow for testing...
@@ -212,10 +212,10 @@ def trajectoryInput():
 
     #these are the rats that get trajectory training:
     tr_rats = ['84','93','86','95']
-    for tr in tr_rats:
-        if animal == tr:
-            filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 20) + '.txt' # Determine the filename for the traininglist trajectory
-            break    
+#    for tr in tr_rats:
+#        if animal == tr:
+#            filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 20) + '.txt' # Determine the filename for the traininglist trajectory
+#            break    
     print(filename_in)
 
     with open (filename_in, 'r') as f:
@@ -223,7 +223,8 @@ def trajectoryInput():
         #training_list = [x.strip() for x in training_list] 
         #This opens the trajectory list file for that day and turns it into a list
 
-    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(Rew_Batch) + '.txt' # Determine the filename for the traininglist trajectory
+#    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(Rew_Batch) + '.txt' # Determine the filename for the traininglist trajectory
+    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(route) + '.txt' # Determine the filename for the traininglist trajectory
 
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
