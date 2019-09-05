@@ -189,8 +189,8 @@ def trajectoryInput():
     animal = input("What animal is this?")
     day = input("What day of training is this?")
 #    Rew_Batch = input("What batch of rewards is this?")
+    rew_check = input("Should the rats receive reward? Hit enter for yes, type 'n' for no")
     
-      
     #this is added to allow for testing...
     if animal == 't' and day == 't':
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
@@ -224,7 +224,11 @@ def trajectoryInput():
         #This opens the trajectory list file for that day and turns it into a list
 
 #    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(Rew_Batch) + '.txt' # Determine the filename for the traininglist trajectory
-    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + str(route) + '.txt' # Determine the filename for the traininglist trajectory
+    if (rew_check == 'n' or rew_check == 'no'):
+        rew_batch_num = str(0)
+    else:
+        rew_batch_num = str(route)
+    filename_rew = '/mnt/DataShare/Rew_Lists/Rew_Batch_' + rew_batch_num + '.txt' # Determine the filename for the traininglist trajectory
 
     with open (filename_rew, 'r') as r:
         rew_list = r.readlines()
