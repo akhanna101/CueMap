@@ -196,6 +196,7 @@ def trajectoryInput():
         filename_save = 'Data/' + SAVEFOLDER + '/Test.txt'
         route = 1
         day = 1
+        filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day)) + '.txt' # Determine the filename for the traininglist trajectory
     else: 
         # allows animals 9-16 to pull trajectories from 1-8:
         route = int(animal)
@@ -204,11 +205,13 @@ def trajectoryInput():
             route = 8
         filename_save = 'Data/' + SAVEFOLDER + '/CM'+str(animal) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
-    #check to make sure there isn't a filename already with that name
-    filename = checkfilename(filename_save)
+        filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 33) + '.txt' # Determine the filename for the traininglist trajectory
+        # filename_in = '/mnt/DataShare/Lists_RW/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
     
-    filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 33) + '.txt' # Determine the filename for the traininglist trajectory
-    # filename_in = '/mnt/DataShare/Lists_RW/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
+    #check to make sure there isn't a filename already with that name
+        filename = checkfilename(filename_save)
+    
+      
 
     # #these are the rats that get trajectory training:
     # tr_rats = ['84','93','86','95']
