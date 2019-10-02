@@ -207,16 +207,16 @@ def trajectoryInput():
     #check to make sure there isn't a filename already with that name
     filename = checkfilename(filename_save)
     
+    filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 33) + '.txt' # Determine the filename for the traininglist trajectory
+    # filename_in = '/mnt/DataShare/Lists_RW/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
 
-    filename_in = '/mnt/DataShare/Lists_RW/List_' + str(route) + '_' + str(day) + '.txt' # Determine the filename for the traininglist trajectory
-
-    #these are the rats that get trajectory training:
-    tr_rats = ['84','93','86','95']
-#    for tr in tr_rats:
-#        if animal == tr:
-#            filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 20) + '.txt' # Determine the filename for the traininglist trajectory
-#            break    
-    print(filename_in)
+    # #these are the rats that get trajectory training:
+    # tr_rats = ['84','93','86','95']
+   # for tr in tr_rats:
+       # if animal == tr:
+           # filename_in = '/mnt/DataShare/Lists_RW_Traj/List_' + str(route) + '_' + str(int(day) - 20) + '.txt' # Determine the filename for the traininglist trajectory
+           # break    
+    # print(filename_in)
 
     with open (filename_in, 'r') as f:
         training_list = f.readlines()
