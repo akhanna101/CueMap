@@ -17,7 +17,7 @@ nosePoke = 22
 
 #this sets the pins for plexon
 strobe = 4
-videoTTL = 2
+videoTTL = 14
 plx_word = [5,6,12,13,15,17,24,25]
 npout = 27
 rstart = 10
