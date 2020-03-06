@@ -13,8 +13,9 @@ NPs = ([], [])
 dipper = 23
 nosePoke = 22
 
-#this sets the pins for plexon
+#this sets the pins for plexon events
 strobe = 4
+videoTTL = 2
 plx_word = [5,6,12,13,15,17,24,25]
 npout = 27
 rstart = 10
@@ -51,6 +52,9 @@ GPIO.output(dipper, 0)
 
 GPIO.setup(strobe, GPIO.OUT)
 GPIO.output(strobe, 0)
+#Below is setup for video TTL 
+GPIO.setup(videoTTL, GPIO.OUT)
+GPIO.output(videoTTL, 0)
 
 GPIO.setup(npout, GPIO.OUT)
 GPIO.output(npout, 0)
@@ -392,11 +396,13 @@ for p in range(len(pos)):
     #play_for(numpy.stack((Map[r][0], Map[c][1]),axis=1),4000,0.5,0.5)
     savedata(str(pos[p]))
     GPIO.output(strobe, True) 
+    GPIO.output(videoTTL, True) 
     adjust_vol(rchan,cchan,volt[r],volc[c],rp == r, cp == c)
     #play_for(soundr,soundc,volc[c],volt[r],rp == r, cp == c,int(Freq[c][1] - offset))
     #start = time.time()
     _,offset = trunc_divmod(cueTime_ms,Freq[c][1])
     GPIO.output(strobe, False) 
+    GPIO.output(videoTTL, False)
     #print(r,c)
     #play_for(Map[c][1],4000,1,0)
     #print(time.time()-start)
